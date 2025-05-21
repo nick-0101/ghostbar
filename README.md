@@ -2,6 +2,10 @@
 
 I want to be able to highlight any piece of content on the web, weather that be text or an image, and be able to click a keyboard shortcut to immediately pull up a chatgpt window with that selected text as context.
 
+## TODO
+
+Figure out how we can use typescript
+
 ## Concepts
 
 - Popup Script (popup.js):
