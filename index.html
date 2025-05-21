@@ -1,6 +1,41 @@
+<!DOCTYPE html>
 <html>
+  <head>
+    <style>
+      body {
+        width: 300px;
+        padding: 10px;
+      }
+      .container {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      input {
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+      }
+      button {
+        padding: 8px;
+        background-color: #4caf50;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+      button:hover {
+        background-color: #45a049;
+      }
+    </style>
+  </head>
   <body>
-    <h1>Hello Extensions</h1>
+    <div class="container">
+      <h2>Save Value</h2>
+      <input type="text" id="valueInput" placeholder="Enter a value" />
+      <button id="saveButton">Save</button>
+      <p id="status"></p>
+    </div>
     <script src="popup.js"></script>
   </body>
 </html>
