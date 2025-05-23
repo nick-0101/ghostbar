@@ -4,8 +4,9 @@
   "version": "1.0",
   "manifest_version": 3,
   "permissions": ["storage"],
+  "host_permissions": ["http://localhost:5173/*"],
   "action": {
     "default_popup": "index.html",
-    "default_icon": "hello_extensions.png"
+    "default_icon": "public/hello_extensions.png"
   }
 }
