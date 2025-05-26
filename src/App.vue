@@ -28,10 +28,11 @@ const saveValue = () => {
 </script>
 
 <template>
-  <div class="container">
+  <div class="container font-inter">
     <h2>Save Value</h2>
     <input type="text" v-model="valueInput" placeholder="Enter a value" />
     <button @click="saveValue">Save</button>
+
     <p :style="{ color: statusColor }">{{ statusMessage }}</p>
   </div>
 </template>
