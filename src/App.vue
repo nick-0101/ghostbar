@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
+import Button from "@/components/ui/button.vue";
 
 const valueInput = ref("");
 const statusMessage = ref("");
@@ -28,12 +29,8 @@ const saveValue = () => {
 </script>
 
 <template>
-  <div class="container font-inter">
-    <h2>Save Value</h2>
-    <input type="text" v-model="valueInput" placeholder="Enter a value" />
-    <button @click="saveValue">Save</button>
-
-    <p :style="{ color: statusColor }">{{ statusMessage }}</p>
+  <div class="font-inter">
+    <Button variant="default">Button</Button>
   </div>
 </template>
 
