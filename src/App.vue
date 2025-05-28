@@ -7,32 +7,32 @@ const valueInput = ref("");
 const statusMessage = ref("");
 const statusColor = ref("");
 
-onMounted(() => {
-  // Load saved value when popup opens
-  chrome.storage.local.get(["savedValue"], (result) => {
-    if (result.savedValue) {
-      valueInput.value = result.savedValue;
-    }
-  });
-});
+// onMounted(() => {
+//   // Load saved value when popup opens
+//   chrome.storage.local.get(["savedValue"], (result) => {
+//     if (result.savedValue) {
+//       valueInput.value = result.savedValue;
+//     }
+//   });
+// });
 
-const saveValue = () => {
-  chrome.storage.local.set({ savedValue: valueInput.value }, () => {
-    statusMessage.value = "Value saved!";
-    statusColor.value = "green";
+// const saveValue = () => {
+//   chrome.storage.local.set({ savedValue: valueInput.value }, () => {
+//     statusMessage.value = "Value saved!";
+//     statusColor.value = "green";
 
-    // Clear status message after 2 seconds
-    setTimeout(() => {
-      statusMessage.value = "";
-    }, 2000);
-  });
-};
+//     // Clear status message after 2 seconds
+//     setTimeout(() => {
+//       statusMessage.value = "";
+//     }, 2000);
+//   });
+// };
 </script>
 
 <template>
   <div class="flex flex-col py-4 border-b w-[350px] h-[400px] bg-white font-inter">
     <AppHeader />
-    <Home />
+    <RouterView />
   </div>
 </template>
 

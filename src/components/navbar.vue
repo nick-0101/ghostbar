@@ -8,6 +8,7 @@ import { ROUTE_NAMES } from "@/router";
 const router = useRouter();
 
 const navigateToSettings = () => {
+  console.log("navigateToSettings");
   router.push({ name: ROUTE_NAMES.SETTINGS });
 };
 </script>
@@ -18,11 +19,11 @@ const navigateToSettings = () => {
       <template #default>
         <div class="flex flex-row items-center justify-between">
           <h1 class="text-xl font-bold">GhostBar</h1>
-          <div @click="navigateToSettings">
+          <router-link :to="{ name: ROUTE_NAMES.SETTINGS }">
             <Button variant="ghost" size="icon">
               <IconSettings class="w-5 h-5" />
             </Button>
-          </div>
+          </router-link>
         </div>
       </template>
     </Container>
