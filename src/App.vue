@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
-import Button from "@/components/ui/button.vue";
+import AppHeader from "@/components/navbar.vue";
+import Home from "@/views/Home.vue";
 
 const valueInput = ref("");
 const statusMessage = ref("");
@@ -29,8 +30,9 @@ const saveValue = () => {
 </script>
 
 <template>
-  <div class="font-inter">
-    <Button variant="default">Button</Button>
+  <div class="flex flex-col py-4 border-b w-[350px] h-[400px] bg-white font-inter">
+    <AppHeader />
+    <Home />
   </div>
 </template>
 
