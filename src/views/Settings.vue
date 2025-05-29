@@ -1,34 +1,34 @@
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { ref, watch, onMounted } from "vue";
 import Container from "@/components/container.vue";
 import Input from "@/components/ui/input.vue";
 import Label from "@/components/ui/label.vue";
 import Button from "@/components/ui/button.vue";
+import { useAI } from "@/composable/useAI";
 
-const apiKeyInput = ref("");
+const { openAiKey, handleSetOpenAiKey } = useAI();
+const statusMessage = ref("");
 
-const saveValue = () => {
-  console.log(chrome.storage);
-  chrome.storage.local.set({ savedValue: apiKeyInput.value }, () => {
-    // statusMessage.value = "Value saved!";
-    // statusColor.value = "green";
-    // // Clear status message after 2 seconds
-    // setTimeout(() => {
-    //   statusMessage.value = "";
-    // }, 2000);
-  });
+const saveValue = async () => {
+  await handleSetOpenAiKey(openAiKey.value);
+  // chrome.storage.sync.set({ apiKey: apiKeyInput.value }, () => {
+  //   statusMessage.value = "Value saved!";
+  //   // Clear status message after 2 seconds
+  //   setTimeout(() => {
+  //     statusMessage.value = "";
+  //   }, 2000);
+  // });
 };
 
 onMounted(() => {
-  // Load saved value when popup opens
-  console.log(chrome.storage);
-  chrome.storage?.local.get(["apiKey"], (result) => {
-    console.log(result);
-    if (result.apiKey) {
-      apiKeyInput.value = result.apiKey;
-    }
-  });
+  console.log("openAiKey", openAiKey.value);
 });
+watch(
+  () => openAiKey.value,
+  () => {
+    console.log("openAiKey", openAiKey.value);
+  }
+);
 </script>
 
 <template>
@@ -36,8 +36,10 @@ onMounted(() => {
     <template #default>
       <div class="grid w-full max-w-sm items-center gap-1.5">
         <Label for="api-key">API Key</Label>
-        <Input id="api-key" placeholder="OpenAI API Key" v-model="apiKeyInput" />
+        <Input id="api-key" placeholder="OpenAI API Key" v-model="openAiKey" />
         <Button class="mt-2 cursor-pointer" @click="saveValue">Save</Button>
+
+        {{ statusMessage }}
       </div>
     </template>
   </Container>
