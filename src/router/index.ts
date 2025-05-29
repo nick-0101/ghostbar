@@ -1,7 +1,7 @@
 import { createMemoryHistory, createRouter } from "vue-router";
 
-import HomeView from "@/views/Home.vue";
-import SettingsView from "@/views/Settings.vue";
+import HomeView from "@/views/home.vue";
+import SettingsView from "@/views/settings.vue";
 
 export const ROUTE_NAMES = {
   HOME: "home",

@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
 import AppHeader from "@/components/navbar.vue";
-import Home from "@/views/Home.vue";
 
 // const valueInput = ref("");
 // const statusMessage = ref("");
