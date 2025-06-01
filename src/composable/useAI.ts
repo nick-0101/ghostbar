@@ -19,7 +19,6 @@ export const useAI = () => {
 
   onMounted(async () => {
     if (!openAiKey.value) {
-      console.log("refetching");
       await fetchOpenAiKey();
     }
   });
