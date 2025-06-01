@@ -1,7 +1,7 @@
 // src/components/form/useFormField.ts
-import { inject, computed } from "vue";
+import { computed, inject } from "vue";
 import { useField } from "vee-validate";
-import { FORM_ITEM_INJECTION_KEY } from "../components/form";
+import { FORM_ITEM_INJECTION_KEY } from "@/components/ui/form";
 
 export const useFormField = () => {
   const fieldContext = inject(FORM_ITEM_INJECTION_KEY, "");
@@ -13,12 +13,11 @@ export const useFormField = () => {
   const formMessageId = computed(() => `${fieldContext}-form-item-message`);
 
   return {
-    id: fieldContext,
+    name,
     formItemId,
     formDescriptionId,
-    formMessageId,
-    name,
-    error: errorMessage,
     value,
+    formMessageId: `${fieldContext}-form-message`,
+    error: errorMessage,
   };
 };
