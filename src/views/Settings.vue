@@ -13,8 +13,11 @@ import FormLabel from "@/components/ui/form/FormLabel.vue";
 import FormMessage from "@/components/ui/form/FormMessage.vue";
 import { Field as FormField } from "vee-validate";
 import { useForm } from "vee-validate";
+import { useAIStore } from "@/stores/ai";
 
-const { openAiKey, handleSetOpenAiKey } = useAI();
+const aiStore = useAIStore();
+const { handleSetOpenAiKey } = useAI();
+
 const statusMessage = ref("");
 const showPassword = ref(false);
 
@@ -27,7 +30,7 @@ const formSchema = toTypedSchema(
 const form = useForm({
   validationSchema: formSchema,
   initialValues: {
-    apiKey: openAiKey.value,
+    apiKey: aiStore.openAiKey,
   },
 });
 
@@ -40,9 +43,12 @@ const onSubmit = form.handleSubmit(async (values) => {
   }, 2000);
 });
 
-const saveValue = async () => {
-  await handleSetOpenAiKey(openAiKey.value);
-};
+watch(
+  () => aiStore.openAiKey,
+  (newKey) => {
+    form.setFieldValue("apiKey", newKey);
+  }
+);
 </script>
 
 <template>

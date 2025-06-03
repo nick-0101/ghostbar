@@ -23,5 +23,5 @@ export const useAI = () => {
     }
   });
 
-  return { openAiKey, fetchOpenAiKey, handleSetOpenAiKey };
+  return { fetchOpenAiKey, handleSetOpenAiKey };
 };
