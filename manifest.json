@@ -3,10 +3,25 @@
   "description": "Base Level Extension",
   "version": "1.0",
   "manifest_version": 3,
-  "permissions": ["storage"],
+  "permissions": ["storage", "activeTab", "scripting"],
   "host_permissions": ["http://localhost:5173/*"],
   "action": {
     "default_popup": "index.html",
     "default_icon": "public/hello_extensions.png"
-  }
+  },
+  "commands": {
+    "_execute_action": {
+      "suggested_key": {
+        "default": "Alt+Shift+I",
+        "mac": "Alt+Shift+I"
+      },
+      "description": "Toggle GhostBar overlay"
+    }
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["dist/content.js"]
+    }
+  ]
 }

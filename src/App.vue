@@ -26,6 +26,20 @@ import AppHeader from "@/components/navbar.vue";
 //     }, 2000);
 //   });
 // };
+
+chrome.commands.onCommand.addListener((command) => {
+  if (command === "_execute_action") {
+    // Get the active tab
+    console.log("command", command);
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+      const activeTab = tabs[0];
+      if (activeTab.id) {
+        // Send message to content script
+        chrome.tabs.sendMessage(activeTab.id, { action: "toggleOverlay" });
+      }
+    });
+  }
+});
 </script>
 
 <template>
@@ -34,18 +48,3 @@ import AppHeader from "@/components/navbar.vue";
     <RouterView />
   </div>
 </template>
-
-<style scoped>
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
-}
-</style>
