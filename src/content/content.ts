@@ -12,6 +12,10 @@ function injectGhostbarStyles() {
       transition: opacity 0.3s ease-in-out;
       display: none;
     }
+
+    .ghostbar-overlay-content {
+      padding:
+    }
   `;
   document.head.appendChild(style);
 }
@@ -21,10 +25,11 @@ function createOverlay() {
   const overlay = document.createElement("div");
   overlay.id = "ghostbar-overlay";
   overlay.innerHTML = `
-    <div>
+    <div class="ghostbar-overlay-content">
       some content here
     </div>
   `;
+  overlay.style.display = "none";
   document.body.appendChild(overlay);
   return overlay;
 }
