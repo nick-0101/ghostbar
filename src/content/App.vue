@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from "vue";
+import Button from "../components/ui/button.vue";
+import { XIcon } from "lucide-vue-next";
 
 const isVisible = ref(false);
 const position = ref({ x: 0, y: 0 });
@@ -107,15 +109,17 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div id="ghostbar-overlay" :style="{ display: isVisible ? 'block' : 'none' }" @mousedown="handleMouseDown" class="ghostbar-overlay">
-    <div class="ghostbar-overlay-content">
-      <div class="ghostbar-header">
+  <div id="ghostbar-overlay" :style="{ display: isVisible ? 'block' : 'none' }" @mousedown="handleMouseDown" class="ghostbar-overlay font-inter">
+    <div class="p-4">
+      <div class="flex flex-row justify-between">
         <h2 class="ghostbar-title">Ghost Bar</h2>
-        <button class="ghostbar-close" @click="toggleOverlay">×</button>
+        <Button type="submit" @click="toggleOverlay">
+          <XIcon class="w-4 h-4" />
+        </Button>
       </div>
       <div class="ghostbar-body">
-        <p>Drag to move or use arrow keys.</p>
-        <p>Press Escape to close.</p>
+        <p class="text-2xl">Drag to move or use arrow keys.</p>
+        <p class="text-sm">Press Escape to close.</p>
       </div>
     </div>
   </div>

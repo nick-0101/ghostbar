@@ -1,4 +1,5 @@
 import "./style.css";
+chrome.runtime.getURL("./style.css");
 import { createApp } from "vue";
 import App from "./App.vue";
 
