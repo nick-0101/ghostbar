@@ -109,11 +109,11 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div id="ghostbar-overlay" :style="{ display: isVisible ? 'block' : 'none' }" @mousedown="handleMouseDown" class="ghostbar-overlay font-inter">
-    <div class="p-4">
-      <div class="flex flex-row justify-between">
+  <div id="ghostbar-overlay" :style="{ display: isVisible ? 'block' : 'none' }" @mousedown="handleMouseDown" class="ghostbar-overlay font-inter dark">
+    <div class="ghostbar-overlay-content">
+      <div class="ghostbar-header">
         <h2 class="ghostbar-title">Ghost Bar</h2>
-        <Button type="submit" @click="toggleOverlay">
+        <Button class="ghostbar-close" type="submit" @click="toggleOverlay">
           <XIcon class="w-4 h-4" />
         </Button>
       </div>
