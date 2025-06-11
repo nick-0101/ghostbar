@@ -2,7 +2,10 @@
 import { ref, onMounted, onUnmounted } from "vue";
 import { XIcon } from "lucide-vue-next";
 
-const isVisible = ref(false);
+const emit = defineEmits<{
+  "update:toggleOutputOverlay": [value: boolean];
+}>();
+
 const position = ref({ x: 0, y: 0 });
 const isDragging = ref(false);
 const dragOffset = ref({ x: 0, y: 0 });
@@ -16,8 +19,6 @@ function updatePosition() {
 }
 
 function handleKeyDown(e: KeyboardEvent) {
-  if (!isVisible.value) return;
-
   switch (e.key) {
     case "ArrowUp":
       position.value.y -= moveSpeed;
@@ -82,17 +83,9 @@ function handleMouseUp() {
   }
 }
 
-function toggleOverlay() {
-  isVisible.value = !isVisible.value;
+function toggleOutputOverlay() {
+  emit("update:toggleOutputOverlay", false);
 }
-
-// Listen for messages from the extension
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-  if (message.action === "toggleOverlay") {
-    toggleOverlay();
-  }
-  return true;
-});
 
 onMounted(() => {
   document.addEventListener("keydown", handleKeyDown);
@@ -108,11 +101,11 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div id="ghostbar-overlay" :style="{ display: isVisible ? 'block' : 'none' }" @mousedown="handleMouseDown" class="ghostbar-overlay font-inter">
+  <div id="ghostbar-overlay" class="ghostbar-overlay font-inter" @mousedown="handleMouseDown">
     <div class="ghostbar-overlay-content">
       <div class="ghostbar-header">
         <h2 class="ghostbar-title">Ghost Bar</h2>
-        <button class="ghostbar-close" type="submit" @click="toggleOverlay">
+        <button class="ghostbar-close" type="submit" @click="toggleOutputOverlay">
           <XIcon class="w-4 h-4" />
         </button>
       </div>
