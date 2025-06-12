@@ -3,7 +3,7 @@ import { ref, onMounted, onUnmounted } from "vue";
 import { XIcon } from "lucide-vue-next";
 
 const emit = defineEmits<{
-  "update:toggleOutputOverlay": [value: boolean];
+  "update:toggleOutputOverlay": [];
 }>();
 
 const position = ref({ x: 0, y: 0 });
@@ -84,7 +84,7 @@ function handleMouseUp() {
 }
 
 function toggleOutputOverlay() {
-  emit("update:toggleOutputOverlay", false);
+  emit("update:toggleOutputOverlay");
 }
 
 onMounted(() => {

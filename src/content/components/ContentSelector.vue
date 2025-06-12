@@ -5,6 +5,10 @@ const cursorPosition = ref({ x: 0, y: 0 });
 const hoveredElement = ref<HTMLElement | null>(null);
 const selectedText = ref<string>("");
 
+const emit = defineEmits<{
+  "update:toggleOutputOverlay": [];
+}>();
+
 function handleMouseMove(event: MouseEvent) {
   cursorPosition.value = { x: event.clientX, y: event.clientY };
 
@@ -25,6 +29,7 @@ function handleClick(event: MouseEvent) {
     console.log("Selected text:", selectedText.value);
     // chrome.runtime.sendMessage({ action: "selectText", text: selectedText.value });
     handleRemoveEventListeners();
+    emit("update:toggleOutputOverlay");
   }
 }
 

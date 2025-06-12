@@ -20,7 +20,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
 <template>
   <div :style="{ display: isVisible ? 'block' : 'none' }">
-    <ContentSelector />
+    <ContentSelector @update:toggleOutputOverlay="toggleOverlay" />
   </div>
   <!-- <AiOutput v-model:toggleOutputOverlay="isVisible" /> -->
 </template>
