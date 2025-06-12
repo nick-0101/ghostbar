@@ -1,15 +1,19 @@
 <script setup lang="ts">
-import { onMounted, onUnmounted, ref } from "vue";
+import { onMounted, onUnmounted, ref, watch } from "vue";
 
 const cursorPosition = ref({ x: 0, y: 0 });
 const hoveredElement = ref<HTMLElement | null>(null);
 const selectedText = ref<string>("");
 
+const props = defineProps<{
+  isVisible: boolean;
+}>();
+
 const emit = defineEmits<{
   "update:toggleOutputOverlay": [];
 }>();
 
-function handleMouseMove(event: MouseEvent) {
+const handleMouseMove = (event: MouseEvent) => {
   cursorPosition.value = { x: event.clientX, y: event.clientY };
 
   // Get element under cursor
@@ -17,30 +21,53 @@ function handleMouseMove(event: MouseEvent) {
   if (element && element !== hoveredElement.value) {
     hoveredElement.value = element;
   }
-}
+};
 
-function handleClick(event: MouseEvent) {
+const handleClick = (event: MouseEvent) => {
   event.preventDefault();
   event.stopPropagation();
 
   if (hoveredElement.value) {
     selectedText.value = hoveredElement.value.textContent || "";
     // You can emit this selected text to parent component or handle it as needed
-    console.log("Selected text:", selectedText.value);
-    // chrome.runtime.sendMessage({ action: "selectText", text: selectedText.value });
-    handleRemoveEventListeners();
+    // chrome.runtime.sendMessage({ action: "selectedContent", type: "text", text: selectedText.value });
+
     emit("update:toggleOutputOverlay");
+    handleRemoveEventListeners();
   }
-}
+};
+
+const handleScroll = () => {
+  handleRemoveEventListeners();
+  emit("update:toggleOutputOverlay");
+};
+
+const handleAddEventListeners = () => {
+  document.addEventListener("mousemove", handleMouseMove);
+  document.addEventListener("click", handleClick, true);
+  document.addEventListener("scroll", handleScroll, true);
+};
 
 const handleRemoveEventListeners = () => {
   document.removeEventListener("mousemove", handleMouseMove);
   document.removeEventListener("click", handleClick, true);
+  document.removeEventListener("scroll", handleScroll), true;
 };
 
+watch(
+  () => props.isVisible,
+  (newValue) => {
+    if (newValue) {
+      handleAddEventListeners();
+    } else {
+      handleRemoveEventListeners();
+    }
+  }
+);
+
 onMounted(() => {
-  document.addEventListener("mousemove", handleMouseMove);
-  document.addEventListener("click", handleClick, true);
+  console.log("mounted");
+  handleAddEventListeners();
 });
 
 onUnmounted(() => {

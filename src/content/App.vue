@@ -13,14 +13,16 @@ function toggleOverlay() {
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.action === "toggleOverlay") {
     toggleOverlay();
+    console.log("toggleOverlay", isVisible.value, new Date().getTime());
+    // isVisible.value = message.isVisible;
   }
-  return true;
+  return true; // Indicate we're not doing async work
 });
 </script>
 
 <template>
   <div :style="{ display: isVisible ? 'block' : 'none' }">
-    <ContentSelector @update:toggleOutputOverlay="toggleOverlay" />
+    <ContentSelector :is-visible="isVisible" @update:toggleOutputOverlay="toggleOverlay" />
   </div>
   <!-- <AiOutput v-model:toggleOutputOverlay="isVisible" /> -->
 </template>
