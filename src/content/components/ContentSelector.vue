@@ -24,9 +24,14 @@ function handleClick(event: MouseEvent) {
     // You can emit this selected text to parent component or handle it as needed
     console.log("Selected text:", selectedText.value);
     // chrome.runtime.sendMessage({ action: "selectText", text: selectedText.value });
-    document.removeEventListener("click", handleClick, true);
+    handleRemoveEventListeners();
   }
 }
+
+const handleRemoveEventListeners = () => {
+  document.removeEventListener("mousemove", handleMouseMove);
+  document.removeEventListener("click", handleClick, true);
+};
 
 onMounted(() => {
   document.addEventListener("mousemove", handleMouseMove);
@@ -34,8 +39,7 @@ onMounted(() => {
 });
 
 onUnmounted(() => {
-  document.removeEventListener("mousemove", handleMouseMove);
-  document.removeEventListener("click", handleClick, true);
+  handleRemoveEventListeners();
 });
 </script>
 
@@ -59,39 +63,6 @@ onUnmounted(() => {
 </template>
 
 <style scoped>
-/* .ghostbar-selector {
-  position: fixed;
-  transform: translate(-50%, -50%);
-  pointer-events: none;
-  z-index: 999999;
-}
-
-.ghostbar-content-selector-content {
-  border: 1px solid #1a1a1a;
-  border-radius: 100%;
-  color: white;
-  padding: 20px;
-  border-radius: 4px;
-  font-size: 14px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.selector-icon {
-  font-size: 16px;
-}
-
-.element-highlight {
-  position: fixed;
-  background: rgba(111, 168, 220, 0.2);
-  border: 2px solid rgb(111, 168, 220);
-  pointer-events: none;
-  z-index: 999998;
-  box-sizing: border-box;
-} */
-
 .ghostbar-selector {
   position: fixed;
   transform: translate(-50%, -50%);
