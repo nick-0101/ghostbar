@@ -12,9 +12,8 @@ function toggleOverlay() {
 // Listen for messages from the extension
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.action === "toggleOverlay") {
-    toggleOverlay();
     console.log("toggleOverlay", isVisible.value, new Date().getTime());
-    // isVisible.value = message.isVisible;
+    isVisible.value = message.isVisible;
   }
   return true; // Indicate we're not doing async work
 });

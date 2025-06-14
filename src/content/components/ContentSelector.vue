@@ -45,13 +45,13 @@ const handleScroll = () => {
 const handleAddEventListeners = () => {
   document.addEventListener("mousemove", handleMouseMove);
   document.addEventListener("click", handleClick, true);
-  document.addEventListener("scroll", handleScroll, true);
+  //   document.addEventListener("scroll", handleScroll, true);
 };
 
 const handleRemoveEventListeners = () => {
   document.removeEventListener("mousemove", handleMouseMove);
   document.removeEventListener("click", handleClick, true);
-  document.removeEventListener("scroll", handleScroll), true;
+  //   document.removeEventListener("scroll", handleScroll), true;
 };
 
 watch(
@@ -64,11 +64,6 @@ watch(
     }
   }
 );
-
-onMounted(() => {
-  console.log("mounted");
-  handleAddEventListeners();
-});
 
 onUnmounted(() => {
   handleRemoveEventListeners();

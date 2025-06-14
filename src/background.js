@@ -12,6 +12,10 @@
 //   }
 // });
 
+// NOTE FOR TOMORROW:
+// The issue we're having is that the extension
+// is becoming active on every tab, weather it's new or not.
+
 // Track active tabs
 const activeTabs = new Set();
 
@@ -21,14 +25,17 @@ chrome.commands.onCommand.addListener((command) => {
   if (command === "toggle-ghostbar") {
     // Get the active tab
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+      console.log("tabs", tabs);
       const activeTab = tabs[0];
       if (activeTab.id) {
         try {
           // Toggle the active state for this tab
           if (activeTabs.has(activeTab.id)) {
+            console.log("deleting tab", activeTab.id);
             activeTabs.delete(activeTab.id);
             chrome.tabs.sendMessage(activeTab.id, { action: "toggleOverlay", isVisible: false });
           } else {
+            console.log("adding tab", activeTab.id);
             activeTabs.add(activeTab.id);
             chrome.tabs.sendMessage(activeTab.id, { action: "toggleOverlay", isVisible: true });
           }
