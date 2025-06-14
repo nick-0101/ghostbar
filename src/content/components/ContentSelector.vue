@@ -1,9 +1,12 @@
 <script setup lang="ts">
 import { onMounted, onUnmounted, ref, watch } from "vue";
+import SearchInput from "./SearchInput.vue";
 
 const cursorPosition = ref({ x: 0, y: 0 });
 const hoveredElement = ref<HTMLElement | null>(null);
+const clickedElement = ref<HTMLElement | null>(null);
 const selectedText = ref<string>("");
+const scrollPosition = ref({ x: 0, y: 0 });
 
 const props = defineProps<{
   isVisible: boolean;
@@ -12,6 +15,15 @@ const props = defineProps<{
 const emit = defineEmits<{
   "update:toggleOutputOverlay": [];
 }>();
+
+const HIGHLIGHT_CLASS = "ghostbar-highlighted-selected-element";
+
+const updateScrollPosition = () => {
+  scrollPosition.value = {
+    x: window.scrollX,
+    y: window.scrollY,
+  };
+};
 
 const handleMouseMove = (event: MouseEvent) => {
   cursorPosition.value = { x: event.clientX, y: event.clientY };
@@ -28,65 +40,73 @@ const handleClick = (event: MouseEvent) => {
   event.stopPropagation();
 
   if (hoveredElement.value) {
+    // Remove highlight from previous element
+    if (clickedElement.value) {
+      clickedElement.value.classList.remove(HIGHLIGHT_CLASS);
+    }
+
     selectedText.value = hoveredElement.value.textContent || "";
-    // You can emit this selected text to parent component or handle it as needed
-    // chrome.runtime.sendMessage({ action: "selectedContent", type: "text", text: selectedText.value });
+    clickedElement.value = hoveredElement.value;
+    hoveredElement.value = null;
 
-    emit("update:toggleOutputOverlay");
-    handleRemoveEventListeners();
+    console.log("selectedText", selectedText.value);
+    // Add highlight class to the clicked element
+    clickedElement.value.classList.add(HIGHLIGHT_CLASS);
+
+    // Remove mousemove listener to disable hover
+    document.removeEventListener("mousemove", handleMouseMove);
   }
-};
-
-const handleScroll = () => {
-  handleRemoveEventListeners();
-  emit("update:toggleOutputOverlay");
 };
 
 const handleAddEventListeners = () => {
   document.addEventListener("mousemove", handleMouseMove);
   document.addEventListener("click", handleClick, true);
+  window.addEventListener("scroll", updateScrollPosition);
   //   document.addEventListener("scroll", handleScroll, true);
 };
 
 const handleRemoveEventListeners = () => {
   document.removeEventListener("mousemove", handleMouseMove);
   document.removeEventListener("click", handleClick, true);
+  window.removeEventListener("scroll", updateScrollPosition);
   //   document.removeEventListener("scroll", handleScroll), true;
 };
 
 watch(
   () => props.isVisible,
   (newValue) => {
+    console.log("newValue from watch function", newValue);
     if (newValue) {
       handleAddEventListeners();
     } else {
       handleRemoveEventListeners();
+      if (clickedElement.value) {
+        clickedElement.value.classList.remove(HIGHLIGHT_CLASS);
+      }
+      selectedText.value = "";
+      clickedElement.value = null;
+      hoveredElement.value = null;
     }
   }
 );
-
-onUnmounted(() => {
-  handleRemoveEventListeners();
-});
 </script>
 
 <template>
   <div class="ghostbar-selector" :style="{ top: `${cursorPosition.y}px`, left: `${cursorPosition.x}px` }">
-    <div class="ghostbar-content-selector-content">
-      <!-- <div class="selector-icon">👆</div>
-      <p>Click to select text</p> -->
-    </div>
+    <div class="ghostbar-content-selector-content"></div>
   </div>
   <div
     v-if="hoveredElement"
     class="element-highlight"
     :style="{
-      top: hoveredElement.getBoundingClientRect().top + 'px',
-      left: hoveredElement.getBoundingClientRect().left + 'px',
-      width: hoveredElement.getBoundingClientRect().width + 'px',
-      height: hoveredElement.getBoundingClientRect().height + 'px',
+      top: hoveredElement?.getBoundingClientRect()?.top + 'px',
+      left: hoveredElement?.getBoundingClientRect()?.left + 'px',
+      width: hoveredElement?.getBoundingClientRect()?.width + 'px',
+      height: hoveredElement?.getBoundingClientRect()?.height + 'px',
     }"
   ></div>
+
+  <SearchInput v-if="selectedText" @executeQuery="() => {}" />
 </template>
 
 <style scoped>
@@ -170,5 +190,12 @@ onUnmounted(() => {
   50% {
     box-shadow: 0 0 15px rgba(111, 168, 220, 0.4);
   }
+}
+</style>
+
+<style global>
+.ghostbar-highlighted-selected-element {
+  outline: 2px solid rgb(111, 168, 220);
+  background: rgba(111, 168, 220, 0.2);
 }
 </style>

@@ -30,7 +30,6 @@ import AppHeader from "@/components/navbar.vue";
 chrome.commands.onCommand.addListener((command) => {
   if (command === "_execute_action") {
     // Get the active tab
-    console.log("command", command);
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       const activeTab = tabs[0];
       if (activeTab.id) {

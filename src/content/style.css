@@ -5,3 +5,8 @@
   display: swap;
   src: url("chrome-extension://__MSG_@@extension_id__/src/content/fonts/Inter.ttf");
 }
+
+.ghostbar-highlighted-selected-element {
+  outline: 2px solid rgb(111, 168, 220);
+  background: rgba(111, 168, 220, 0.2);
+}
