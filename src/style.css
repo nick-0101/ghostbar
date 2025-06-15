@@ -1,15 +1,17 @@
 @import "tailwindcss";
 
 @font-face {
-  font-family: "Inter";
-  display: swap;
-  src: url("/Inter.ttf");
+  font-family: "Geist";
+  font-display: swap;
+  font-weight: 500;
+  font-style: normal;
+  src: url("/Geist.ttf") format("truetype");
 }
 
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-  --font-inter: "Inter", sans-serif;
+  --font-inter: "Geist", sans-serif;
 
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -55,6 +57,8 @@
   }
   body {
     @apply bg-background text-foreground;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 }
 

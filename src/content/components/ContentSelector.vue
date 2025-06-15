@@ -106,12 +106,3 @@ watch(
     <SearchInput v-if="selectedText" @executeQuery="() => {}" />
   </div>
 </template>
-
-<style scoped></style>
-
-<style global>
-.ghostbar-highlighted-selected-element {
-  outline: 2px solid rgb(111, 168, 220);
-  background: rgba(111, 168, 220, 0.2);
-}
-</style>

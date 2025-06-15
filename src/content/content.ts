@@ -8,6 +8,12 @@ const shadowHost = document.createElement("div");
 shadowHost.id = "ghostbar-shadow-host";
 document.body.appendChild(shadowHost);
 
+const fonts = document.createElement("link");
+fonts.type = "text/css";
+fonts.rel = "stylesheet";
+fonts.href = "https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap";
+document.head.appendChild(fonts);
+
 // Create shadow root
 const shadowRoot = shadowHost.attachShadow({ mode: "open" });
 

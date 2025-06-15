@@ -11,7 +11,7 @@
   },
   "web_accessible_resources": [
     {
-      "resources": ["src/content/style.css", "src/content/fonts/Inter.ttf"],
+      "resources": ["src/content/style.css"],
       "matches": ["<all_urls>"]
     }
   ],
