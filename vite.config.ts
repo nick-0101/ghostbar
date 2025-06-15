@@ -3,7 +3,7 @@ import vue from "@vitejs/plugin-vue";
 import { crx } from "@crxjs/vite-plugin";
 import manifest from "./manifest.json";
 import tailwindcss from "@tailwindcss/vite";
-import { fileURLToPath, resolve } from "url";
+import { fileURLToPath } from "url";
 
 // https://vite.dev/config/
 export default defineConfig({

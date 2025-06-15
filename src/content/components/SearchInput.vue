@@ -1,8 +1,11 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { onMounted, onUnmounted, ref } from "vue";
 import { useUserQueriesStore } from "@/stores/queries";
 import { storeToRefs } from "pinia";
 
+const cursorPosition = ref({ x: window.innerWidth / 2, y: window.innerHeight - 100 });
+const isDragging = ref(false);
+const dragOffset = ref({ x: 0, y: 0 });
 const userQueriesStore = useUserQueriesStore();
 const { queries, currentQuery } = storeToRefs(userQueriesStore);
 
@@ -13,73 +16,57 @@ const emit = defineEmits<{
 const handleExecuteQuery = () => {
   emit("executeQuery", currentQuery.value);
 };
+
+const handleMouseDown = (event: MouseEvent) => {
+  isDragging.value = true;
+  dragOffset.value = {
+    x: event.clientX - cursorPosition.value.x,
+    y: event.clientY - cursorPosition.value.y,
+  };
+};
+
+const handleMouseMove = (event: MouseEvent) => {
+  if (isDragging.value) {
+    cursorPosition.value = {
+      x: event.clientX - dragOffset.value.x,
+      y: event.clientY - dragOffset.value.y,
+    };
+  }
+};
+
+const handleMouseUp = () => {
+  isDragging.value = false;
+};
+
+onMounted(() => {
+  window.addEventListener("mousemove", handleMouseMove);
+  window.addEventListener("mouseup", handleMouseUp);
+});
+
+onUnmounted(() => {
+  window.removeEventListener("mousemove", handleMouseMove);
+  window.removeEventListener("mouseup", handleMouseUp);
+});
 </script>
 
 <template>
-  <div class="ghostbar-search-input-container">
-    <input type="text" placeholder="Ask anything" v-model="currentQuery" />
-    <button class="search-input-button" @click="handleExecuteQuery">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="12" cy="12" r="12" fill="white" />
-        <path d="M10 12h4m0 0l-2-2m2 2l-2 2" stroke="#222" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-      </svg>
-    </button>
+  <div
+    class="ghostbar-search-input-container"
+    :style="{
+      left: cursorPosition.x + 'px',
+      top: cursorPosition.y + 'px',
+      transform: 'translateX(-50%)',
+    }"
+    @mousedown="handleMouseDown"
+  >
+    <div class="ghostbar-search-input-container-inner Card">
+      <input class="Input" type="text" placeholder="Ask anything" v-model="currentQuery" />
+      <button class="Button" variant="icon" data-size="icon" @click="handleExecuteQuery">
+        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="m5 12 7-7 7 7" />
+          <path d="M12 19V5" />
+        </svg>
+      </button>
+    </div>
   </div>
 </template>
-
-<style scoped>
-.ghostbar-search-input-container {
-  position: fixed;
-  left: 50%;
-  bottom: 40px;
-  transform: translateX(-50%);
-  z-index: 999997;
-  display: flex;
-  align-items: center;
-  background: none;
-  width: 100%;
-  margin: 32px auto 0 auto;
-}
-
-.ghostbar-search-input-container input {
-  width: 100%;
-  background: #232427;
-  border: none;
-  outline: none;
-  color: #fff;
-  font-size: 1.25rem;
-  padding: 14px 20px 14px 20px;
-  border-radius: 16px 40px 40px 16px;
-  font-family: inherit;
-  transition: box-shadow 0.2s;
-  box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.1);
-}
-
-.ghostbar-search-input-container input::placeholder {
-  color: #b0b3b8;
-  opacity: 1;
-}
-
-.search-input-button {
-  position: absolute;
-  right: 8px;
-  top: 50%;
-  transform: translateY(-50%);
-  background: #fff;
-  border: none;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.1);
-  cursor: pointer;
-  padding: 0;
-  z-index: 1;
-}
-
-.search-input-button svg {
-  display: block;
-}
-</style>
