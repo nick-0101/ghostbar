@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, onUnmounted, ref, watch } from "vue";
+import { computed, ref, watch } from "vue";
 import SearchInput from "./SearchInput.vue";
 
 const cursorPosition = ref({ x: 0, y: 0 });
@@ -13,13 +13,6 @@ const props = defineProps<{
 }>();
 
 const HIGHLIGHT_CLASS = "ghostbar-highlighted-selected-element";
-
-const updateScrollPosition = () => {
-  scrollPosition.value = {
-    x: window.scrollX,
-    y: window.scrollY,
-  };
-};
 
 const handleMouseMove = (event: MouseEvent) => {
   cursorPosition.value = { x: event.clientX, y: event.clientY };
@@ -41,11 +34,10 @@ const handleClick = (event: MouseEvent) => {
       clickedElement.value.classList.remove(HIGHLIGHT_CLASS);
     }
 
-    selectedText.value = hoveredElement.value.textContent || "";
+    selectedText.value = hoveredElement.value.textContent?.trim() || "";
     clickedElement.value = hoveredElement.value;
     hoveredElement.value = null;
 
-    console.log("selectedText", selectedText.value);
     // Add highlight class to the clicked element
     clickedElement.value.classList.add(HIGHLIGHT_CLASS);
 
@@ -54,24 +46,31 @@ const handleClick = (event: MouseEvent) => {
   }
 };
 
+const updateScrollPosition = () => {
+  scrollPosition.value = {
+    x: window.scrollX,
+    y: window.scrollY,
+  };
+
+  // hoveredElement.value = null;
+  // clickedElement.value = null;
+};
+
 const handleAddEventListeners = () => {
   document.addEventListener("mousemove", handleMouseMove);
   document.addEventListener("click", handleClick, true);
   window.addEventListener("scroll", updateScrollPosition);
-  //   document.addEventListener("scroll", handleScroll, true);
 };
 
 const handleRemoveEventListeners = () => {
   document.removeEventListener("mousemove", handleMouseMove);
   document.removeEventListener("click", handleClick, true);
   window.removeEventListener("scroll", updateScrollPosition);
-  //   document.removeEventListener("scroll", handleScroll), true;
 };
 
 watch(
   () => props.isVisible,
   (newValue) => {
-    console.log("newValue from watch function", newValue);
     if (newValue) {
       handleAddEventListeners();
     } else {
@@ -85,13 +84,20 @@ watch(
     }
   }
 );
+
+// const searchInputStyle = computed(() => {
+//   if (!clickedElement.value) return {};
+//   const rect = clickedElement.value.getBoundingClientRect();
+//   return {
+//     top: rect?.top + rect?.height + "px",
+//     left: rect?.left + "px",
+//   };
+// });
 </script>
 
 <template>
   <div class="ghostbar-content-selector">
-    <div class="ghostbar-selector" :style="{ top: `${cursorPosition.y}px`, left: `${cursorPosition.x}px` }">
-      <div class="ghostbar-content-selector-content"></div>
-    </div>
+    <div class="ghostbar-selector" :style="{ top: `${cursorPosition.y}px`, left: `${cursorPosition.x}px` }"></div>
     <div
       v-if="hoveredElement"
       class="element-highlight"
@@ -102,7 +108,6 @@ watch(
         height: hoveredElement?.getBoundingClientRect()?.height + 'px',
       }"
     ></div>
-
-    <SearchInput v-if="selectedText" @executeQuery="() => {}" />
+    <SearchInput :selectedText="selectedText" />
   </div>
 </template>

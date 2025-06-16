@@ -8,6 +8,15 @@ const shadowHost = document.createElement("div");
 shadowHost.id = "ghostbar-shadow-host";
 document.body.appendChild(shadowHost);
 
+const globalStyleElement = document.createElement("style");
+globalStyleElement.textContent = `
+  .ghostbar-highlighted-selected-element {
+    outline: 2px solid rgb(111, 168, 220);
+    background: rgba(111, 168, 220, 0.2);
+  }
+`;
+document.head.appendChild(globalStyleElement);
+
 const fonts = document.createElement("link");
 fonts.type = "text/css";
 fonts.rel = "stylesheet";

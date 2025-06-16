@@ -1,9 +1,10 @@
+import { OpenAI } from "openai";
+
 // Track active tabs
 const activeTabs = new Set();
 
 // Listen for keyboard command
 chrome.commands.onCommand.addListener((command) => {
-  console.log("command", command);
   if (command === "toggle-ghostbar") {
     // Get the active tab
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
@@ -23,6 +24,103 @@ chrome.commands.onCommand.addListener((command) => {
         }
       }
     });
+  }
+});
+
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  if (message.action === "executeQuery") {
+    const query = message.query;
+
+    console.log("query", message);
+    (async () => {
+      // async code goes here
+      // ...
+      // const result = await getSomething();
+      // sendResponse(result);
+    })();
+
+    // Create a new ReadableStream to handle the streaming response
+    // fetch("https://api.openai.com/v1/chat/completions", {
+    //   method: "POST",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //     Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+    //   },
+    //   body: JSON.stringify({
+    //     model: "gpt-3.5-turbo",
+    //     messages: [{ role: "user", content: query }],
+    //     stream: true,
+    //   }),
+    // })
+    //   .then((response) => {
+    //     const reader = response.body.getReader();
+    //     const decoder = new TextDecoder();
+
+    //     function readStream() {
+    //       reader.read().then(({ done, value }) => {
+    //         if (done) {
+    //           // Stream is complete
+    //           chrome.tabs.sendMessage(sender.tab.id, {
+    //             action: "streamComplete",
+    //           });
+    //           return;
+    //         }
+
+    //         // Decode the chunk and process it
+    //         const chunk = decoder.decode(value);
+    //         const lines = chunk.split("\n").filter((line) => line.trim() !== "");
+
+    //         lines.forEach((line) => {
+    //           if (line.startsWith("data: ")) {
+    //             const data = line.slice(6);
+    //             if (data === "[DONE]") return;
+
+    //             try {
+    //               const parsed = JSON.parse(data);
+    //               const content = parsed.choices[0]?.delta?.content;
+    //               if (content) {
+    //                 chrome.tabs.sendMessage(sender.tab.id, {
+    //                   action: "streamChunk",
+    //                   chunk: content,
+    //                 });
+    //               }
+    //             } catch (e) {
+    //               console.error("Error parsing chunk:", e);
+    //             }
+    //           }
+    //         });
+
+    //         // Continue reading the stream
+    //         readStream();
+    //       });
+    //     }
+
+    //     // Start reading the stream
+    //     readStream();
+    //   })
+    //   .catch((error) => {
+    //     chrome.tabs.sendMessage(sender.tab.id, {
+    //       action: "streamError",
+    //       error: error.message,
+    //     });
+    //   });
+
+    //   const stream = await client.responses.create({
+    //     model: "gpt-4.1",
+    //     input: [
+    //         {
+    //             role: "user",
+    //             content: "Say 'double bubble bath' ten times fast.",
+    //         },
+    //     ],
+    //     stream: true,
+    // });
+
+    // for await (const event of stream) {
+    //     console.log(event);
+    // }
+
+    return true; // Keep the message channel open
   }
 });
 
