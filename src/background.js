@@ -29,15 +29,32 @@ chrome.commands.onCommand.addListener((command) => {
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.action === "executeQuery") {
-    const query = message.query;
+    // console.log(message);
+    // const tabId = sender.tab.id;
+    // console.log(tabId);
 
-    console.log("query", message);
-    (async () => {
-      // async code goes here
-      // ...
-      // const result = await getSomething();
-      // sendResponse(result);
-    })();
+    // (async () => {
+    //   const client = new OpenAI({
+    //     apiKey: "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",
+    //   });
+
+    //   const stream = await client.responses.create({
+    //     model: "gpt-4.1",
+    //     input: [
+    //       {
+    //         role: "user",
+    //         content: "Say 'double bubble bath' ten times fast.",
+    //       },
+    //     ],
+    //     stream: true,
+    //   });
+
+    //   for await (const event of stream) {
+    //     const response = await chrome.tabs.sendMessage(tabId, { aiResponse: event.message });
+    //     // do something with response here, not outside the function
+    //     console.log(response);
+    //   }
+    // })();
 
     // Create a new ReadableStream to handle the streaming response
     // fetch("https://api.openai.com/v1/chat/completions", {

@@ -713,6 +713,11 @@
     outline: 2px solid rgb(111, 168, 220);
     background: rgba(111, 168, 220, 0.2);
   }
+
+  .ghostbar-hidden {
+    display: none !important;
+    pointer-events: none;
+  }
 }
 
 @layer utilities {

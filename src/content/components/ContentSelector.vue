@@ -72,8 +72,10 @@ watch(
   () => props.isVisible,
   (newValue) => {
     if (newValue) {
+      console.log("mount");
       handleAddEventListeners();
     } else {
+      console.log("unmount");
       handleRemoveEventListeners();
       if (clickedElement.value) {
         clickedElement.value.classList.remove(HIGHLIGHT_CLASS);

@@ -13,8 +13,11 @@ const props = defineProps<{
   selectedText: string;
 }>();
 
+// Acknowledgment tracking
+const acknowledgments: Record<string, (data: any) => void> = {};
+const port = chrome.runtime.connect();
+
 const handleExecuteQuery = () => {
-  console.log("execute query");
   chrome.runtime.sendMessage({ action: "executeQuery", selectedText: props.selectedText, query: currentQuery.value });
 };
 
