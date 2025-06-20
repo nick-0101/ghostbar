@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, watch } from "vue";
+import { computed, ref, watch, watchEffect } from "vue";
 import SearchInput from "./SearchInput.vue";
 
 const cursorPosition = ref({ x: 0, y: 0 });
@@ -51,20 +51,17 @@ const updateScrollPosition = () => {
     x: window.scrollX,
     y: window.scrollY,
   };
-
-  // hoveredElement.value = null;
-  // clickedElement.value = null;
 };
 
 const handleAddEventListeners = () => {
   document.addEventListener("mousemove", handleMouseMove);
-  document.addEventListener("click", handleClick, true);
+  document.addEventListener("click", handleClick);
   window.addEventListener("scroll", updateScrollPosition);
 };
 
 const handleRemoveEventListeners = () => {
   document.removeEventListener("mousemove", handleMouseMove);
-  document.removeEventListener("click", handleClick, true);
+  document.removeEventListener("click", handleClick);
   window.removeEventListener("scroll", updateScrollPosition);
 };
 
@@ -72,10 +69,8 @@ watch(
   () => props.isVisible,
   (newValue) => {
     if (newValue) {
-      console.log("mount");
       handleAddEventListeners();
     } else {
-      console.log("unmount");
       handleRemoveEventListeners();
       if (clickedElement.value) {
         clickedElement.value.classList.remove(HIGHLIGHT_CLASS);
@@ -86,15 +81,6 @@ watch(
     }
   }
 );
-
-// const searchInputStyle = computed(() => {
-//   if (!clickedElement.value) return {};
-//   const rect = clickedElement.value.getBoundingClientRect();
-//   return {
-//     top: rect?.top + rect?.height + "px",
-//     left: rect?.left + "px",
-//   };
-// });
 </script>
 
 <template>

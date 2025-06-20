@@ -627,6 +627,7 @@
     position: fixed;
     z-index: 999999;
     background: none;
+    pointer-events: all;
   }
 
   .ghostbar-search-input-container-inner {
@@ -647,16 +648,17 @@
 
   .ghostbar-search-button {
     border-radius: 9999px;
+    pointer-events: auto !important;
     width: min-content;
   }
 
   /* ContentSelector.vue */
   .ghostbar-content-selector {
-    position: relative;
+    /* position: relative;
     top: 0;
     left: 0;
     width: 100%;
-    height: 100%;
+    height: 100%; */
     z-index: 999997;
   }
 
@@ -715,8 +717,16 @@
   }
 
   .ghostbar-hidden {
-    display: none !important;
+    opacity: 0;
     pointer-events: none;
+    transition: opacity 0.2s;
+    /* Remove pointer-events from transition to avoid timing issues */
+  }
+  .ghostbar-visible {
+    opacity: 1;
+    pointer-events: auto;
+    transition: opacity 0.2s;
+    /* Remove pointer-events from transition to avoid timing issues */
   }
 }
 

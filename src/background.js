@@ -27,117 +27,63 @@ chrome.commands.onCommand.addListener((command) => {
   }
 });
 
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-  if (message.action === "executeQuery") {
-    // console.log(message);
-    // const tabId = sender.tab.id;
-    // console.log(tabId);
+chrome.runtime.onConnect.addListener((port) => {
+  console.log("Port connected:", port.name);
 
-    // (async () => {
-    //   const client = new OpenAI({
-    //     apiKey: "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",
-    //   });
+  if (port.name === "ghostbar-stream") {
+    console.log("GhostBar stream port connected successfully");
 
-    //   const stream = await client.responses.create({
-    //     model: "gpt-4.1",
-    //     input: [
-    //       {
-    //         role: "user",
-    //         content: "Say 'double bubble bath' ten times fast.",
-    //       },
-    //     ],
-    //     stream: true,
-    //   });
+    port.onMessage.addListener((msg) => {
+      console.log("Received message:", msg);
 
-    //   for await (const event of stream) {
-    //     const response = await chrome.tabs.sendMessage(tabId, { aiResponse: event.message });
-    //     // do something with response here, not outside the function
-    //     console.log(response);
-    //   }
-    // })();
+      // Handle messages from content script if needed
+      if (msg.action === "executeQuery") {
+        console.log("Executing query:", msg.prompt);
 
-    // Create a new ReadableStream to handle the streaming response
-    // fetch("https://api.openai.com/v1/chat/completions", {
-    //   method: "POST",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //     Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
-    //   },
-    //   body: JSON.stringify({
-    //     model: "gpt-3.5-turbo",
-    //     messages: [{ role: "user", content: query }],
-    //     stream: true,
-    //   }),
-    // })
-    //   .then((response) => {
-    //     const reader = response.body.getReader();
-    //     const decoder = new TextDecoder();
+        // Start streaming from OpenAI here
+        (async () => {
+          try {
+            const client = new OpenAI({
+              apiKey: "",
+            });
 
-    //     function readStream() {
-    //       reader.read().then(({ done, value }) => {
-    //         if (done) {
-    //           // Stream is complete
-    //           chrome.tabs.sendMessage(sender.tab.id, {
-    //             action: "streamComplete",
-    //           });
-    //           return;
-    //         }
+            const stream = await client.responses.create({
+              model: "gpt-4.1",
+              input: [
+                {
+                  role: "user",
+                  content: msg.prompt || "Say 'double bubble bath' ten times fast.",
+                },
+              ],
+              stream: true,
+            });
 
-    //         // Decode the chunk and process it
-    //         const chunk = decoder.decode(value);
-    //         const lines = chunk.split("\n").filter((line) => line.trim() !== "");
+            for await (const chunk of stream) {
+              if (chunk.type === "response.output_text.delta") {
+                port.postMessage({ aiResponse: chunk.delta });
+              }
+            }
 
-    //         lines.forEach((line) => {
-    //           if (line.startsWith("data: ")) {
-    //             const data = line.slice(6);
-    //             if (data === "[DONE]") return;
+            port.postMessage({
+              action: "streamComplete",
+              completeResponse: "Stream completed",
+            });
 
-    //             try {
-    //               const parsed = JSON.parse(data);
-    //               const content = parsed.choices[0]?.delta?.content;
-    //               if (content) {
-    //                 chrome.tabs.sendMessage(sender.tab.id, {
-    //                   action: "streamChunk",
-    //                   chunk: content,
-    //                 });
-    //               }
-    //             } catch (e) {
-    //               console.error("Error parsing chunk:", e);
-    //             }
-    //           }
-    //         });
+            console.log("Streaming completed successfully");
+          } catch (error) {
+            console.error("Error during streaming:", error);
+            port.postMessage({
+              action: "streamError",
+              error: error.message,
+            });
+          }
+        })();
+      }
+    });
 
-    //         // Continue reading the stream
-    //         readStream();
-    //       });
-    //     }
-
-    //     // Start reading the stream
-    //     readStream();
-    //   })
-    //   .catch((error) => {
-    //     chrome.tabs.sendMessage(sender.tab.id, {
-    //       action: "streamError",
-    //       error: error.message,
-    //     });
-    //   });
-
-    //   const stream = await client.responses.create({
-    //     model: "gpt-4.1",
-    //     input: [
-    //         {
-    //             role: "user",
-    //             content: "Say 'double bubble bath' ten times fast.",
-    //         },
-    //     ],
-    //     stream: true,
-    // });
-
-    // for await (const event of stream) {
-    //     console.log(event);
-    // }
-
-    return true; // Keep the message channel open
+    port.onDisconnect.addListener(() => {
+      console.log("GhostBar stream port disconnected");
+    });
   }
 });
 
