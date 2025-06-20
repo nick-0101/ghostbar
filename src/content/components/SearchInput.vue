@@ -13,12 +13,14 @@ const props = defineProps<{
   selectedText: string;
 }>();
 
-// Acknowledgment tracking
-const acknowledgments: Record<string, (data: any) => void> = {};
-// const port = chrome.runtime.connect();
+const port = chrome.runtime.connect({ name: "ghostbar-api" });
 
 const handleExecuteQuery = () => {
-  chrome.runtime.sendMessage({ action: "executeQuery", selectedText: props.selectedText, query: currentQuery.value });
+  port.postMessage({
+    action: "executeQuery",
+    selectedText: props.selectedText,
+    prompt: currentQuery.value,
+  });
 };
 
 const handleMouseDown = (event: MouseEvent) => {

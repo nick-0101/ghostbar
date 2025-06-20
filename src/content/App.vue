@@ -1,13 +1,14 @@
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from "vue";
+import { ref, onMounted, onUnmounted, onBeforeUnmount } from "vue";
 import AiOutput from "./components/AiOutput.vue";
 import ContentSelector from "./components/ContentSelector.vue";
+import { usePortStore } from "@/stores/portStore";
 
 const isVisible = ref(false);
 const streamedResponse = ref("");
 const isStreaming = ref(false);
 const completeResponses = ref<any[]>([]);
-const port = chrome.runtime.connect({ name: "ghostbar-stream" });
+const { connectPort, sendMessage, onMessage, disconnectPort } = usePortStore();
 
 function toggleOverlay() {
   isVisible.value = !isVisible.value;
@@ -19,12 +20,11 @@ const messageListener = (message: any, sender: any, sendResponse: any) => {
     isVisible.value = message.isVisible;
   }
 
-  console.log(message);
   return true;
 };
 
 function sendQuery(prompt: string) {
-  port.postMessage({
+  sendMessage({
     action: "executeQuery",
     prompt,
   });
@@ -38,7 +38,10 @@ function clearResponse() {
 }
 
 onMounted(() => {
-  port.onMessage.addListener((msg) => {
+  chrome.runtime.onMessage.addListener(messageListener);
+  connectPort();
+
+  onMessage((msg) => {
     if (msg.aiResponse) {
       streamedResponse.value += msg.aiResponse;
       console.log(msg.aiResponse);
@@ -51,16 +54,10 @@ onMounted(() => {
     }
   });
 });
-onMounted(() => {
-  console.log("Chrome runtime is available");
-  chrome.runtime.onMessage.addListener(messageListener);
-});
 
-onUnmounted(() => {
+onBeforeUnmount(() => {
   chrome.runtime.onMessage.removeListener(messageListener);
-  if (port) {
-    port.disconnect();
-  }
+  disconnectPort();
 });
 </script>
 

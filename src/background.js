@@ -30,7 +30,7 @@ chrome.commands.onCommand.addListener((command) => {
 chrome.runtime.onConnect.addListener((port) => {
   console.log("Port connected:", port.name);
 
-  if (port.name === "ghostbar-stream") {
+  if (port.name === "ghostbar-api") {
     console.log("GhostBar stream port connected successfully");
 
     port.onMessage.addListener((msg) => {
@@ -40,11 +40,10 @@ chrome.runtime.onConnect.addListener((port) => {
       if (msg.action === "executeQuery") {
         console.log("Executing query:", msg.prompt);
 
-        // Start streaming from OpenAI here
         (async () => {
           try {
             const client = new OpenAI({
-              apiKey: "",
+              apiKey: "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",
             });
 
             const stream = await client.responses.create({
@@ -52,7 +51,7 @@ chrome.runtime.onConnect.addListener((port) => {
               input: [
                 {
                   role: "user",
-                  content: msg.prompt || "Say 'double bubble bath' ten times fast.",
+                  content: msg.prompt,
                 },
               ],
               stream: true,
