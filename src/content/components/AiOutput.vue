@@ -184,7 +184,7 @@ onUnmounted(() => {
             </div>
 
             <div v-if="!isStreaming && streamedResponse" class="response-actions">
-              <InlineInput :position-absolute="false" selected-text="selectedText" />
+              <InlineInput selected-text="selectedText" />
             </div>
           </div>
 

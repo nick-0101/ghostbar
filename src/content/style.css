@@ -622,15 +622,15 @@
     width: 2.5rem;
   }
 
-  /* SearchInput.vue */
-  .ghostbar-search-input-container {
+  /* FloatingInput.vue */
+  .ghostbar-floating-input-container {
     position: fixed;
     z-index: 999999;
     background: none;
     pointer-events: all;
   }
 
-  .ghostbar-search-input-container-inner {
+  .ghostbar-floating-input-container-inner {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -646,7 +646,37 @@
     box-shadow: 0 15px 40px -30px rgb(0 0 0 / 0.75);
   }
 
-  .ghostbar-search-button {
+  .ghostbar-floating-input-search-button {
+    border-radius: 9999px;
+    pointer-events: auto !important;
+    width: min-content;
+  }
+
+  /* InlineInput.vue */
+  /* .ghostbar-inline-input-container {
+    position: fixed;
+    z-index: 999999;
+    background: none;
+    pointer-events: all;
+  } */
+
+  .ghostbar-inline-input-container-inner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    width: max-content;
+    padding: 15px 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    pointer-events: auto;
+    border: 1px solid var(--border);
+    box-shadow: 0 15px 40px -30px rgb(0 0 0 / 0.75);
+  }
+
+  .ghostbar-inline-input-search-button {
     border-radius: 9999px;
     pointer-events: auto !important;
     width: min-content;
@@ -688,9 +718,8 @@
   }
 
   .ghostbar-hidden {
-    opacity: 0;
+    display: none;
     pointer-events: none;
-    transition: opacity 0.2s;
     /* Remove pointer-events from transition to avoid timing issues */
   }
   .ghostbar-visible {
@@ -882,11 +911,8 @@
   }
 
   .response-actions {
-    display: flex;
-    gap: 8px;
-    padding: 12px 16px;
-    background: rgba(248, 249, 250, 0.8);
-    border-top: 1px solid rgba(233, 236, 239, 0.8);
+    width: 100%;
+    margin-top: 12px;
   }
 
   .action-btn {

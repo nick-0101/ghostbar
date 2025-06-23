@@ -56,10 +56,10 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="ghostbar-search-input-container" @mousedown="handleMouseDown">
-    <div class="ghostbar-search-input-container-inner Card">
+  <div @mousedown="handleMouseDown">
+    <div class="ghostbar-inline-input-container-inner Card">
       <input class="Input" type="text" placeholder="Ask anything" v-model="currentQuery" />
-      <button class="Button ghostbar-search-button" variant="icon" @click.stop="handleExecuteQuery">
+      <button class="Button ghostbar-inline-input-search-button" variant="icon" @click.stop="handleExecuteQuery">
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="m5 12 7-7 7 7" />
           <path d="M12 19V5" />
