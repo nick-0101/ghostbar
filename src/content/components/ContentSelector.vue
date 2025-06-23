@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { computed, ref, watch, watchEffect } from "vue";
-import SearchInput from "./SearchInput.vue";
+import { computed, onMounted, onUnmounted, ref, watch, watchEffect } from "vue";
+import FloatingInput from "./FloatingInput.vue";
 
 const cursorPosition = ref({ x: 0, y: 0 });
 const hoveredElement = ref<HTMLElement | null>(null);
@@ -96,6 +96,6 @@ watch(
         height: hoveredElement?.getBoundingClientRect()?.height + 'px',
       }"
     ></div>
-    <SearchInput :selectedText="selectedText" />
+    <FloatingInput :selectedText="selectedText" />
   </div>
 </template>

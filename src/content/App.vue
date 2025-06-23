@@ -42,15 +42,19 @@ onMounted(() => {
   connectPort();
 
   onMessage((msg) => {
-    if (msg.aiResponse) {
-      streamedResponse.value += msg.aiResponse;
-      console.log(msg.aiResponse);
-    }
-
-    // Handle complete response array
-    if (msg.action === "streamComplete") {
-      isStreaming.value = false;
-      completeResponses.value = msg.completeResponse;
+    switch (msg.action) {
+      case "streamStart":
+        clearResponse();
+        break;
+      case "streamResponse":
+        streamedResponse.value += msg.aiResponse;
+        break;
+      case "streamComplete":
+        isStreaming.value = false;
+        completeResponses.value = msg.completeResponse;
+        break;
+      default:
+        break;
     }
   });
 });
@@ -64,15 +68,6 @@ onBeforeUnmount(() => {
 <template>
   <div :class="isVisible ? 'ghostbar-visible' : 'ghostbar-hidden'">
     <ContentSelector :is-visible="isVisible" @update:toggleOutputOverlay="toggleOverlay" :streamed-response="streamedResponse" :is-streaming="isStreaming" />
-
-    <button @click="sendQuery('Explain this?')">Send Query</button>
-
-    <!-- AI Output Component with streaming -->
-    <AiOutput v-if="isVisible" :streamed-response="streamedResponse" :is-streaming="isStreaming" @clear="clearResponse" @update:toggleOutputOverlay="toggleOverlay" />
-
-    <div v-if="completeResponses.length > 0">
-      <p>Complete responses collected: {{ completeResponses.length }}</p>
-      <button @click="() => console.log('Complete responses array:', completeResponses)">Log Complete Array</button>
-    </div>
+    <AiOutput v-show="isStreaming || streamedResponse" :streamed-response="streamedResponse" :is-streaming="isStreaming" @clear="clearResponse" @update:toggleOutputOverlay="toggleOverlay" />
   </div>
 </template>

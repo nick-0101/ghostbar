@@ -1,22 +1,22 @@
 <script setup lang="ts">
-import { onMounted, onUnmounted, ref } from "vue";
+import { computed, onMounted, onUnmounted, ref } from "vue";
 import { useUserQueriesStore } from "@/stores/queries";
 import { storeToRefs } from "pinia";
+import { usePortStore } from "@/stores/portStore";
 
 const cursorPosition = ref({ x: window.innerWidth / 2, y: window.innerHeight - 100 });
 const isDragging = ref(false);
 const dragOffset = ref({ x: 0, y: 0 });
 const userQueriesStore = useUserQueriesStore();
 const { queries, currentQuery } = storeToRefs(userQueriesStore);
+const { sendMessage } = usePortStore();
 
 const props = defineProps<{
   selectedText: string;
 }>();
 
-const port = chrome.runtime.connect({ name: "ghostbar-api" });
-
 const handleExecuteQuery = () => {
-  port.postMessage({
+  sendMessage({
     action: "executeQuery",
     selectedText: props.selectedText,
     prompt: currentQuery.value,

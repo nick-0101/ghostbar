@@ -28,11 +28,7 @@ chrome.commands.onCommand.addListener((command) => {
 });
 
 chrome.runtime.onConnect.addListener((port) => {
-  console.log("Port connected:", port.name);
-
   if (port.name === "ghostbar-api") {
-    console.log("GhostBar stream port connected successfully");
-
     port.onMessage.addListener((msg) => {
       console.log("Received message:", msg);
 
@@ -40,43 +36,54 @@ chrome.runtime.onConnect.addListener((port) => {
       if (msg.action === "executeQuery") {
         console.log("Executing query:", msg.prompt);
 
-        (async () => {
-          try {
-            const client = new OpenAI({
-              apiKey: "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",
-            });
+        port.postMessage({ action: "streamResponse", aiResponse: "Hello, world!" });
 
-            const stream = await client.responses.create({
-              model: "gpt-4.1",
-              input: [
-                {
-                  role: "user",
-                  content: msg.prompt,
-                },
-              ],
-              stream: true,
-            });
+        port.postMessage({
+          action: "streamComplete",
+          completeResponse: "Stream completed",
+        });
 
-            for await (const chunk of stream) {
-              if (chunk.type === "response.output_text.delta") {
-                port.postMessage({ aiResponse: chunk.delta });
-              }
-            }
+        // (async () => {
+        //   try {
+        //     port.postMessage({
+        //       action: "streamStart",
+        //     });
 
-            port.postMessage({
-              action: "streamComplete",
-              completeResponse: "Stream completed",
-            });
+        //     const client = new OpenAI({
+        //       apiKey: "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",
+        //     });
 
-            console.log("Streaming completed successfully");
-          } catch (error) {
-            console.error("Error during streaming:", error);
-            port.postMessage({
-              action: "streamError",
-              error: error.message,
-            });
-          }
-        })();
+        //     const stream = await client.responses.create({
+        //       model: "gpt-4.1",
+        //       input: [
+        //         {
+        //           role: "user",
+        //           content: `${msg.prompt}\n\n${msg.selectedText}`,
+        //         },
+        //       ],
+        //       stream: true,
+        //     });
+
+        //     for await (const chunk of stream) {
+        //       if (chunk.type === "response.output_text.delta") {
+        //         port.postMessage({ action: "streamResponse", aiResponse: chunk.delta });
+        //       }
+        //     }
+
+        //     port.postMessage({
+        //       action: "streamComplete",
+        //       completeResponse: "Stream completed",
+        //     });
+
+        //     console.log("Streaming completed successfully");
+        //   } catch (error) {
+        //     console.error("Error during streaming:", error);
+        //     port.postMessage({
+        //       action: "streamError",
+        //       error: error.message,
+        //     });
+        //   }
+        // })();
       }
     });
 
