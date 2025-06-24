@@ -34,56 +34,59 @@ chrome.runtime.onConnect.addListener((port) => {
 
       // Handle messages from content script if needed
       if (msg.action === "executeQuery") {
-        console.log("Executing query:", msg.prompt);
+        // For debugging
+        // console.log("Executing query:", msg.prompt);
 
-        port.postMessage({ action: "streamResponse", aiResponse: "Hello, world!" });
+        // port.postMessage({ action: "streamResponse", aiResponse: "Hello, world!" });
 
-        port.postMessage({
-          action: "streamComplete",
-          completeResponse: "Stream completed",
-        });
+        // port.postMessage({
+        //   action: "streamComplete",
+        //   completeResponse: "Stream completed",
+        // });
 
-        // (async () => {
-        //   try {
-        //     port.postMessage({
-        //       action: "streamStart",
-        //     });
+        (async () => {
+          try {
+            port.postMessage({
+              action: "streamStart",
+            });
 
-        //     const client = new OpenAI({
-        //       apiKey: "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",
-        //     });
+            const storageRes = await chrome.storage.sync.get("apiKey");
 
-        //     const stream = await client.responses.create({
-        //       model: "gpt-4.1",
-        //       input: [
-        //         {
-        //           role: "user",
-        //           content: `${msg.prompt}\n\n${msg.selectedText}`,
-        //         },
-        //       ],
-        //       stream: true,
-        //     });
+            const client = new OpenAI({
+              apiKey: storageRes.apiKey,
+            });
 
-        //     for await (const chunk of stream) {
-        //       if (chunk.type === "response.output_text.delta") {
-        //         port.postMessage({ action: "streamResponse", aiResponse: chunk.delta });
-        //       }
-        //     }
+            const stream = await client.responses.create({
+              model: "gpt-4.1",
+              input: [
+                {
+                  role: "user",
+                  content: `${msg.prompt}\n\n${msg.selectedText}`,
+                },
+              ],
+              stream: true,
+            });
 
-        //     port.postMessage({
-        //       action: "streamComplete",
-        //       completeResponse: "Stream completed",
-        //     });
+            for await (const chunk of stream) {
+              if (chunk.type === "response.output_text.delta") {
+                port.postMessage({ action: "streamResponse", aiResponse: chunk.delta });
+              }
+            }
 
-        //     console.log("Streaming completed successfully");
-        //   } catch (error) {
-        //     console.error("Error during streaming:", error);
-        //     port.postMessage({
-        //       action: "streamError",
-        //       error: error.message,
-        //     });
-        //   }
-        // })();
+            port.postMessage({
+              action: "streamComplete",
+              completeResponse: "Stream completed",
+            });
+
+            console.log("Streaming completed successfully");
+          } catch (error) {
+            console.error("Error during streaming:", error);
+            port.postMessage({
+              action: "streamError",
+              error: error.message,
+            });
+          }
+        })();
       }
     });
 
