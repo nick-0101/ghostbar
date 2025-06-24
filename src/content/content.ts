@@ -2,6 +2,10 @@ import styles from "./style.css?inline";
 import { createApp } from "vue";
 import App from "./App.vue";
 import { createPinia } from "pinia";
+import "highlight.js/lib/common";
+import highlightStylesDark from "highlight.js/styles/github-dark.min.css?inline";
+import highlightStylesLight from "highlight.js/styles/github.min.css?inline";
+import hljsVuePlugin from "@highlightjs/vue-plugin";
 
 // Create and append shadow host
 const shadowHost = document.createElement("div");
@@ -37,8 +41,14 @@ const styleElement = document.createElement("style");
 styleElement.textContent = styles;
 shadowRoot.appendChild(styleElement);
 
+// Add highlight.js styles to shadow root
+const hljsStyleElement = document.createElement("style");
+hljsStyleElement.textContent = highlightStylesDark;
+shadowRoot.appendChild(hljsStyleElement);
+
 // Create and mount Vue app
 const app = createApp(App);
+app.use(hljsVuePlugin);
 app.use(createPinia());
 app.mount(appContainer);
 

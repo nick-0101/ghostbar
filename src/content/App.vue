@@ -5,7 +5,7 @@ import ContentSelector from "./components/ContentSelector.vue";
 import { usePortStore } from "@/stores/portStore";
 
 const isVisible = ref(false);
-const streamedResponse = ref(""); // set to empty string, only "hello world in dev"
+const streamedResponse = ref("Hello world"); // set to empty string, only "hello world in dev"
 const isStreaming = ref(false); //set to false, true only for dev
 const completeResponses = ref<any[]>([]);
 const { connectPort, sendMessage, onMessage, disconnectPort } = usePortStore();

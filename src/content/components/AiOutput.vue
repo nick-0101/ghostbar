@@ -2,6 +2,8 @@
 import { ref, onMounted, onUnmounted, computed, watch, nextTick } from "vue";
 import { XIcon } from "lucide-vue-next";
 import InlineInput from "./InlineInput.vue";
+import VueMarkdown from "vue-markdown-render";
+import MarkdownItHighlightjs from "markdown-it-highlightjs";
 
 interface Props {
   streamedResponse: string;
@@ -14,6 +16,7 @@ const emit = defineEmits<{
   clear: [];
 }>();
 
+const vueMarkdownPlugins = [MarkdownItHighlightjs];
 const isDragging = ref(false);
 // const position = ref({ x: 0, y: -100 });
 const cursorPosition = ref({ x: window.innerWidth / 2, y: 100 });
@@ -137,6 +140,26 @@ onUnmounted(() => {
   window.removeEventListener("mousemove", handleMouseMove);
   window.removeEventListener("mouseup", handleMouseUp);
 });
+
+const testOutput = ref(`
+Sure! Let's break it down:
+
+### 1. **What is Shadow DOM?**
+
+**Shadow DOM** is a web standard that allows you to encapsulate part of your DOM and its styles within a 'shadow tree'. This makes a **shadow boundary**—styles and markup inside cannot be accidentally affected by the styles outside (and vice versa), ensuring stronger encapsulation for reusable components.
+
+#### Example
+
+\`\`\`js
+class MyComponent extends HTMLElement {
+  constructor() {
+    super();
+    this.attachShadow({ mode: 'open' }); // Attach shadow DOM
+  }
+}
+customElements.define('my-component', MyComponent);
+\`\`\`
+`);
 </script>
 
 <template>
@@ -149,7 +172,7 @@ onUnmounted(() => {
     }"
     @mousedown="handleMouseDown"
   >
-    <div class="ghostbar-overlay-inner" ref="contentContainer">
+    <div class="ghostbar-overlay-inner">
       <div class="ghostbar-overlay-content">
         <div class="ghostbar-header">
           <button class="ghostbar-close Button" data-variant="ghost" type="submit" @click="toggleOutputOverlay">
@@ -157,29 +180,121 @@ onUnmounted(() => {
           </button>
         </div>
 
+        <span v-if="isStreaming" class="streaming-indicator"></span>
         <div class="ghostbar-body">
           <div v-if="streamedResponse" class="response-content">
-            <div v-if="isStreaming" class="response-header">
-              <span class="streaming-indicator">●</span>
-            </div>
-
-            <div class="response-text">
+            <div class="response-text" ref="contentContainer">
               <pre v-if="isCodeBlock">{{ streamedResponse }}</pre>
-              <div v-else v-html="formattedResponse"></div>
-              <!-- <div v-else>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum pellentesque purus a dui cursus, eget tempor arcu eleifend. Ut ligula eros, semper at suscipit nec, interdum laoreet leo. Pellentesque mattis posuere nibh, sed lacinia odio fringilla nec. Sed molestie ut metus at rutrum. In hac habitasse platea dictumst. Nam tellus nunc, fermentum ac velit vitae, pretium maximus dolor. Aliquam in lobortis purus, et interdum velit. In consectetur, erat nec faucibus congue, nunc urna porta tortor, non aliquam neque nulla nec tellus. Aenean elementum mi eu efficitur vehicula.
-                Curabitur porta, purus sed pretium vehicula, nisl nunc luctus lorem, fermentum vehicula augue ante quis elit. Sed blandit nunc eu augue aliquet, sit amet rutrum arcu bibendum. Fusce at mauris arcu. Maecenas hendrerit facilisis diam, eu blandit arcu vestibulum id. Praesent quis diam mollis, luctus purus ut, sodales nulla. Curabitur in enim pharetra, pretium diam ac, gravida sem. In non gravida nunc. Vestibulum ullamcorper ultrices dapibus. Donec eget nisl turpis. Ut sagittis aliquam cursus. Morbi sit amet lacus vitae ante bibendum venenatis. Nulla a turpis sit amet nunc
-                facilisis dignissim vel quis ipsum. In elementum, erat et condimentum ultricies, augue nulla varius massa, in viverra odio nibh sed erat. In tincidunt nunc ut nisi scelerisque, in tempus leo sagittis. In nec varius quam. Pellentesque convallis, purus nec porta accumsan, nulla turpis suscipit metus, ut dapibus diam est id lectus. Nam sit amet augue in sapien vulputate pellentesque et ut dui. Suspendisse elementum malesuada suscipit. Proin felis lacus, egestas quis mi egestas, sodales lacinia diam. Nam faucibus placerat sem, facilisis sagittis diam vehicula id. Integer gravida ex
-                sit amet enim porttitor, eget dignissim sem blandit. Nullam vitae condimentum nibh, ac tempus sapien.
-              </div> -->
+              <!-- <div v-else v-html="formattedResponse"></div> -->
+              <div v-else>
+                <pre>
+                  <vue-markdown :source="testOutput" :plugins="vueMarkdownPlugins" />
+                </pre>
+                <!-- 
+                <pre>
+                  Sure! Let's break it down:
+
+### 1. **What is Shadow DOM?**
+
+**Shadow DOM** is a web standard that allows you to encapsulate part of your DOM and its styles within a "shadow tree". This makes a **shadow boundary**—styles and markup inside cannot be accidentally affected by the styles outside (and vice versa), ensuring stronger encapsulation for reusable components.
+
+#### Example
+```html
+&lt;my-component&gt;&lt;/my-component&gt;
+```
+Inside your `&lt;my-component&gt;`, you might attach a shadow root:
+
+```js
+class MyComponent extends HTMLElement {
+  constructor() {
+    super();
+    this.attachShadow({ mode: 'open' }); // Attach shadow DOM
+  }
+}
+customElements.define('my-component', MyComponent);
+```
+
+Then your component's DOM is separated from the rest of the page's DOM.
+
+---
+
+### 2. **Why Shadow DOM?**
+
+- **Style encapsulation**: Styles inside the shadow DOM are not affected by global styles.
+- **DOM encapsulation**: DOM inside the shadow boundary cannot be accessed directly by outside scripts and vice versa (unless you use `mode: 'open'` and access `element.shadowRoot`).
+
+---
+
+### 3. **Using Shadow DOM with Dynamic Stylesheets**
+
+In your case, you want your WebComponent to load and apply different stylesheets to the shadow DOM, depending on content type, and these stylesheets are **fetched from the server**.
+
+#### General Workflow
+
+1. **Component Mounts**
+   - Determine what content type needs to be displayed.
+2. **Fetch Stylesheets**
+   - Fetch the list of CSS URLs from your backend.
+3. **Apply Stylesheets to Shadow DOM**
+   - Dynamically inject `&lt;link&gt;` or `&lt;style&gt;` elements into the shadow DOM.
+
+#### Example Implementation
+
+```js
+class MyComponent extends HTMLElement {
+  constructor() {
+    super();
+    this.shadow = this.attachShadow({ mode: 'open' });
+  }
+
+  async connectedCallback() {
+    // 1. Determine content type (simplified for example)
+    const contentType = this.getAttribute('data-type');
+    // 2. Fetch css URLs from server
+      const res = await fetch(`/api/styles?type=${contentType}`);
+      const styleUrls = await res.json(); // e.g., ['https://example.com/style1.css', ...]
+
+      // 3. Inject stylesheet links into shadow DOM
+      for (const url of styleUrls) {
+        const link = document.createElement('link');
+        link.setAttribute('rel', 'stylesheet');
+        link.setAttribute('href', url);
+        this.shadow.appendChild(link);
+      }
+
+      // Add content
+      const contentDiv = document.createElement('div');
+      contentDiv.textContent = `Content for type: ${contentType}`;
+      this.shadow.appendChild(contentDiv);
+    }
+  }
+  customElements.define('my-component', MyComponent);
+  ```
+
+  #### Important Notes:
+  - **Only styles placed inside the shadow DOM will affect its content**. External CSS (from the main page) cannot "leak in".
+  - Loading CSS via `&lt;link rel="stylesheet"&gt;` works just as in regular HTML, but you must append the `&lt;link&gt;` to the shadow root.
+  - If your server returns raw CSS, you can also use a `&lt;style&gt;` tag.
+
+  ---
+
+  ### 4. **Summary**
+
+  - **Shadow DOM** provides style and DOM encapsulation for your component.
+  - To **dynamically load styles**, fetch the CSS in JS and inject it into the shadow root.
+  - This technique lets your component switch styles depending on the content type, while keeping them isolated from the rest of the page.
+
+  If you have a specific problem or error, let me know! I can provide more detail or troubleshooting tips.
+
+                </pre> -->
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-
-    <div v-if="!isStreaming && streamedResponse" class="response-actions">
-      <InlineInput selected-text="selectedText" />
+      <div v-if="!isStreaming && streamedResponse" class="response-actions">
+        <InlineInput selected-text="selectedText" />
+      </div>
     </div>
   </div>
 </template>
