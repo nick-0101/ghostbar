@@ -123,26 +123,6 @@ onUnmounted(() => {
   window.removeEventListener("mousemove", handleMouseMove);
   window.removeEventListener("mouseup", handleMouseUp);
 });
-
-const testOutput = ref(`
-Sure! Let's break it down:
-
-### 1. **What is Shadow DOM?**
-
-**Shadow DOM** is a web standard that allows you to encapsulate part of your DOM and its styles within a 'shadow tree'. This makes a **shadow boundary**—styles and markup inside cannot be accidentally affected by the styles outside (and vice versa), ensuring stronger encapsulation for reusable components.
-
-#### Example
-
-\`\`\`js
-class MyComponent extends HTMLElement {
-  constructor() {
-    super();
-    this.attachShadow({ mode: 'open' }); // Attach shadow DOM
-  }
-}
-customElements.define('my-component', MyComponent);
-\`\`\`
-`);
 </script>
 
 <template>
@@ -166,17 +146,8 @@ customElements.define('my-component', MyComponent);
         <span v-if="isStreaming" class="streaming-indicator"></span>
         <div class="ghostbar-body">
           <div v-if="streamedResponse" class="response-content">
-            <div class="response-text" ref="contentContainer">
-              <div v-if="streamedResponse">
-                <pre>
-                  <vue-markdown :source="streamedResponse" :plugins="vueMarkdownPlugins" />
-                </pre>
-              </div>
-              <!-- <div v-if="testOutput">
-                <pre>
-                  <vue-markdown :source="testOutput" :plugins="vueMarkdownPlugins" />
-                </pre>
-              </div> -->
+            <div v-if="streamedResponse" id="stream-response" class="response-text" ref="contentContainer">
+              <vue-markdown :source="streamedResponse" :plugins="vueMarkdownPlugins" />
             </div>
           </div>
         </div>

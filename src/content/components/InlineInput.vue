@@ -10,6 +10,7 @@ const dragOffset = ref({ x: 0, y: 0 });
 const userQueriesStore = useUserQueriesStore();
 const { queries, currentQuery } = storeToRefs(userQueriesStore);
 const { sendMessage } = usePortStore();
+const chatQuery = ref("");
 
 const props = defineProps<{
   selectedText: string;
@@ -19,7 +20,7 @@ const handleExecuteQuery = () => {
   sendMessage({
     action: "executeQuery",
     selectedText: props.selectedText,
-    prompt: currentQuery.value,
+    prompt: chatQuery.value,
   });
 };
 
@@ -58,7 +59,7 @@ onUnmounted(() => {
 <template>
   <div class="ghostbar-inline-input-container" @mousedown="handleMouseDown">
     <div class="ghostbar-inline-input-container-inner Card">
-      <textarea id="ghostbar-inline-input-textarea" class="Textarea" type="text" placeholder="Ask anything" v-model="currentQuery" />
+      <textarea id="ghostbar-inline-input-textarea" class="Textarea" type="text" placeholder="Ask anything" v-model="chatQuery" />
       <button class="ghostbar-inline-input-search-button" @click.stop="handleExecuteQuery">
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="m5 12 7-7 7 7" />
