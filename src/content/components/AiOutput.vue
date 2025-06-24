@@ -152,8 +152,8 @@ onUnmounted(() => {
     <div class="ghostbar-overlay-inner">
       <div class="ghostbar-overlay-content">
         <div class="ghostbar-header">
-          <button class="ghostbar-close" type="submit" @click="toggleOutputOverlay">
-            <XIcon :color="'var(--muted-foreground)'" :size="16" />
+          <button class="ghostbar-close Button" data-variant="ghost" type="submit" @click="toggleOutputOverlay">
+            <XIcon :color="'var(--muted-foreground)'" :size="18" />
           </button>
         </div>
 
@@ -182,10 +182,6 @@ onUnmounted(() => {
                 sit amet enim porttitor, eget dignissim sem blandit. Nullam vitae condimentum nibh, ac tempus sapien.
               </div>
             </div>
-
-            <div v-if="!isStreaming && streamedResponse" class="response-actions">
-              <InlineInput selected-text="selectedText" />
-            </div>
           </div>
 
           <div v-if="!streamedResponse && !isStreaming" class="default-content">
@@ -194,6 +190,10 @@ onUnmounted(() => {
           </div>
         </div>
       </div>
+    </div>
+
+    <div v-if="!isStreaming && streamedResponse" class="response-actions">
+      <InlineInput selected-text="selectedText" />
     </div>
   </div>
 </template>

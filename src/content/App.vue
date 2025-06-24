@@ -76,7 +76,7 @@ onBeforeUnmount(() => {
 
 <template>
   <!-- <div :class="isVisible ? 'ghostbar-visible' : 'ghostbar-hidden'"> -->
-  <ContentSelector v-show="!isStreaming || !streamedResponse" :is-visible="isVisible" @update:toggleOutputOverlay="toggleOverlay" :streamed-response="streamedResponse" :is-streaming="isStreaming" />
+  <ContentSelector v-show="!isStreaming && !streamedResponse" :is-visible="isVisible" @update:toggleOutputOverlay="toggleOverlay" :streamed-response="streamedResponse" :is-streaming="isStreaming" />
   <AiOutput v-show="isStreaming || streamedResponse" :streamed-response="streamedResponse" :is-streaming="isStreaming" @clear="clearResponse" @update:toggleOutputOverlay="toggleOverlay" />
   <!-- </div> -->
 </template>
