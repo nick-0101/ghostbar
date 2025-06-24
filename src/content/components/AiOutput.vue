@@ -153,7 +153,7 @@ onUnmounted(() => {
       <div class="ghostbar-overlay-content">
         <div class="ghostbar-header">
           <button class="ghostbar-close" type="submit" @click="toggleOutputOverlay">
-            <XIcon style="width: 16px; height: 16px" />
+            <XIcon :color="'var(--muted-foreground)'" :size="16" />
           </button>
         </div>
 

@@ -29,7 +29,7 @@ const shadowRoot = shadowHost.attachShadow({ mode: "open" });
 // Create container for Vue app
 const appContainer = document.createElement("div");
 appContainer.id = "crx-root";
-appContainer.classList.add("ghostbar-hidden"); // initally hide the modal
+appContainer.classList.add("ghostbar-visible"); // initally hide the modal
 shadowRoot.appendChild(appContainer);
 
 // Add styles to shadow root
