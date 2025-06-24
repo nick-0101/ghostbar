@@ -47,7 +47,13 @@ watch(isVisible, (newVal) => {
 });
 
 onMounted(() => {
-  chrome.runtime.onMessage.addListener(messageListener);
+  chrome.runtime.onMessage.addListener((message: any) => {
+    if (message.action === "toggleOverlay") {
+      isVisible.value = message.isVisible;
+    }
+
+    return true;
+  });
   connectPort();
 
   onMessage((msg) => {
@@ -75,8 +81,6 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <!-- <div :class="isVisible ? 'ghostbar-visible' : 'ghostbar-hidden'"> -->
-  <ContentSelector v-show="!isStreaming && !streamedResponse" :is-visible="isVisible" @update:toggleOutputOverlay="toggleOverlay" :streamed-response="streamedResponse" :is-streaming="isStreaming" />
   <AiOutput v-show="isStreaming || streamedResponse" :streamed-response="streamedResponse" :is-streaming="isStreaming" @clear="clearResponse" @update:toggleOutputOverlay="toggleOverlay" />
-  <!-- </div> -->
+  <ContentSelector v-show="!isStreaming && !streamedResponse" :is-visible="isVisible" :streamed-response="streamedResponse" :is-streaming="isStreaming" @update:toggleOutputOverlay="toggleOverlay" />
 </template>

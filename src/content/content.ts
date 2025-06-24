@@ -21,10 +21,23 @@ globalStyleElement.textContent = `
 `;
 document.head.appendChild(globalStyleElement);
 
-const fonts = document.createElement("link");
-fonts.type = "text/css";
-fonts.rel = "stylesheet";
-fonts.href = "https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap";
+// const fonts = document.createElement("link");
+// fonts.type = "text/css";
+// fonts.rel = "stylesheet";
+// fonts.href = "https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap";
+// document.head.appendChild(fonts);
+const fontCSS = `
+  @font-face {
+    font-family: "Geist";
+    src: url(${chrome.runtime.getURL("Geist.ttf")}) format("truetype");
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+  }
+`;
+
+const fonts = document.createElement("style");
+fonts.textContent = fontCSS;
 document.head.appendChild(fonts);
 
 // Create shadow root
@@ -33,7 +46,7 @@ const shadowRoot = shadowHost.attachShadow({ mode: "open" });
 // Create container for Vue app
 const appContainer = document.createElement("div");
 appContainer.id = "crx-root";
-appContainer.classList.add("ghostbar-visible"); // initally hide the modal
+appContainer.classList.add("ghostbar-hidden"); // initally hide the modal
 shadowRoot.appendChild(appContainer);
 
 // Add styles to shadow root
