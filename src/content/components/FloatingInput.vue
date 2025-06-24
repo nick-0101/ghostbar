@@ -66,8 +66,9 @@ onUnmounted(() => {
     @mousedown="handleMouseDown"
   >
     <div class="ghostbar-floating-input-container-inner Card">
-      <input class="Input" type="text" placeholder="Ask anything" v-model="currentQuery" />
-      <button class="Button ghostbar-floating-input-search-button" variant="icon" @click.stop="handleExecuteQuery">
+      <textarea id="ghostbar-floating-input-textarea" class="Textarea" type="text" placeholder="Ask anything" v-model="currentQuery" />
+      <!-- <input class="Input" type="text" placeholder="Ask anything" v-model="currentQuery" /> -->
+      <button class="ghostbar-floating-input-search-button" @click.stop="handleExecuteQuery">
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="m5 12 7-7 7 7" />
           <path d="M12 19V5" />

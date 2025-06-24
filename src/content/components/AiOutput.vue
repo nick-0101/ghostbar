@@ -24,23 +24,6 @@ const dragOffset = ref({ x: 0, y: 0 });
 const moveSpeed = 10;
 const contentContainer = ref<HTMLElement>();
 
-// Check if the response looks like code
-const isCodeBlock = computed(() => {
-  const response = props.streamedResponse.trim();
-  return response.startsWith("```") || response.includes("function") || response.includes("const ") || response.includes("let ") || response.includes("var ") || response.includes("import ") || response.includes("export ");
-});
-
-// Format the response with basic markdown-like formatting
-const formattedResponse = computed(() => {
-  if (!props.streamedResponse) return "";
-
-  return props.streamedResponse
-    .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
-    .replace(/\*(.*?)\*/g, "<em>$1</em>")
-    .replace(/`(.*?)`/g, "<code>$1</code>")
-    .replace(/\n/g, "<br>");
-});
-
 // Auto-scroll to bottom as new content arrives
 watch(
   () => props.streamedResponse,
@@ -184,110 +167,16 @@ customElements.define('my-component', MyComponent);
         <div class="ghostbar-body">
           <div v-if="streamedResponse" class="response-content">
             <div class="response-text" ref="contentContainer">
-              <pre v-if="isCodeBlock">{{ streamedResponse }}</pre>
-              <!-- <div v-else v-html="formattedResponse"></div> -->
-              <div v-else>
+              <div v-if="streamedResponse">
+                <pre>
+                  <vue-markdown :source="streamedResponse" :plugins="vueMarkdownPlugins" />
+                </pre>
+              </div>
+              <!-- <div v-if="testOutput">
                 <pre>
                   <vue-markdown :source="testOutput" :plugins="vueMarkdownPlugins" />
                 </pre>
-                <!-- 
-                <pre>
-                  Sure! Let's break it down:
-
-### 1. **What is Shadow DOM?**
-
-**Shadow DOM** is a web standard that allows you to encapsulate part of your DOM and its styles within a "shadow tree". This makes a **shadow boundary**—styles and markup inside cannot be accidentally affected by the styles outside (and vice versa), ensuring stronger encapsulation for reusable components.
-
-#### Example
-```html
-&lt;my-component&gt;&lt;/my-component&gt;
-```
-Inside your `&lt;my-component&gt;`, you might attach a shadow root:
-
-```js
-class MyComponent extends HTMLElement {
-  constructor() {
-    super();
-    this.attachShadow({ mode: 'open' }); // Attach shadow DOM
-  }
-}
-customElements.define('my-component', MyComponent);
-```
-
-Then your component's DOM is separated from the rest of the page's DOM.
-
----
-
-### 2. **Why Shadow DOM?**
-
-- **Style encapsulation**: Styles inside the shadow DOM are not affected by global styles.
-- **DOM encapsulation**: DOM inside the shadow boundary cannot be accessed directly by outside scripts and vice versa (unless you use `mode: 'open'` and access `element.shadowRoot`).
-
----
-
-### 3. **Using Shadow DOM with Dynamic Stylesheets**
-
-In your case, you want your WebComponent to load and apply different stylesheets to the shadow DOM, depending on content type, and these stylesheets are **fetched from the server**.
-
-#### General Workflow
-
-1. **Component Mounts**
-   - Determine what content type needs to be displayed.
-2. **Fetch Stylesheets**
-   - Fetch the list of CSS URLs from your backend.
-3. **Apply Stylesheets to Shadow DOM**
-   - Dynamically inject `&lt;link&gt;` or `&lt;style&gt;` elements into the shadow DOM.
-
-#### Example Implementation
-
-```js
-class MyComponent extends HTMLElement {
-  constructor() {
-    super();
-    this.shadow = this.attachShadow({ mode: 'open' });
-  }
-
-  async connectedCallback() {
-    // 1. Determine content type (simplified for example)
-    const contentType = this.getAttribute('data-type');
-    // 2. Fetch css URLs from server
-      const res = await fetch(`/api/styles?type=${contentType}`);
-      const styleUrls = await res.json(); // e.g., ['https://example.com/style1.css', ...]
-
-      // 3. Inject stylesheet links into shadow DOM
-      for (const url of styleUrls) {
-        const link = document.createElement('link');
-        link.setAttribute('rel', 'stylesheet');
-        link.setAttribute('href', url);
-        this.shadow.appendChild(link);
-      }
-
-      // Add content
-      const contentDiv = document.createElement('div');
-      contentDiv.textContent = `Content for type: ${contentType}`;
-      this.shadow.appendChild(contentDiv);
-    }
-  }
-  customElements.define('my-component', MyComponent);
-  ```
-
-  #### Important Notes:
-  - **Only styles placed inside the shadow DOM will affect its content**. External CSS (from the main page) cannot "leak in".
-  - Loading CSS via `&lt;link rel="stylesheet"&gt;` works just as in regular HTML, but you must append the `&lt;link&gt;` to the shadow root.
-  - If your server returns raw CSS, you can also use a `&lt;style&gt;` tag.
-
-  ---
-
-  ### 4. **Summary**
-
-  - **Shadow DOM** provides style and DOM encapsulation for your component.
-  - To **dynamically load styles**, fetch the CSS in JS and inject it into the shadow root.
-  - This technique lets your component switch styles depending on the content type, while keeping them isolated from the rest of the page.
-
-  If you have a specific problem or error, let me know! I can provide more detail or troubleshooting tips.
-
-                </pre> -->
-              </div>
+              </div> -->
             </div>
           </div>
         </div>

@@ -662,20 +662,41 @@
     justify-content: center;
     margin: 0 auto;
     width: max-content;
-    padding: 15px 20px;
-    display: flex;
-    align-items: center;
+    padding: 10px 10px 10px 10px;
     gap: 10px;
     min-width: 500px;
     pointer-events: auto;
-    border: 1px solid var(--border);
+    border: 1px solid #4e4e4d;
     box-shadow: 0 15px 40px -30px rgb(0 0 0 / 0.75);
+  }
+
+  #ghostbar-floating-input-textarea {
+    background-color: transparent;
+    resize: none;
+    font-size: var(--font-size-base);
+    line-height: var(--line-height-base);
+    width: 100%;
+    color: var(--primary);
   }
 
   .ghostbar-floating-input-search-button {
     border-radius: 9999px;
     pointer-events: auto !important;
-    width: min-content;
+    background-color: var(--foreground);
+    border: none;
+    color: var(--background);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 2.5rem;
+    width: 2.8rem;
+    padding: 0;
+  }
+
+  .ghostbar-floating-input-search-button:hover {
+    opacity: 0.7;
+    transition: all 0.2s ease;
+    cursor: pointer;
   }
 
   /* InlineInput.vue */
@@ -804,7 +825,7 @@
     background-color: var(--background);
     width: 500px;
     min-height: 300px;
-    max-height: 400px;
+    max-height: 500px;
     box-shadow: 0 8px 32px var(--shadow);
     z-index: 9999;
     transition: all 0.2s ease-in-out;
@@ -923,6 +944,7 @@
 
   .response-text pre > code {
     font-family: monospace !important;
+    font-size: var(--font-size-xs);
   }
 
   .response-actions {
@@ -1352,33 +1374,6 @@
       --container-5xl: 64rem;
       --container-6xl: 72rem;
       --container-7xl: 80rem;
-
-      --text-xs: 0.75rem;
-      --text-xs--line-height: calc(1 / 0.75);
-      --text-sm: 0.875rem;
-      --text-sm--line-height: calc(1.25 / 0.875);
-      --text-base: 1rem;
-      --text-base--line-height: calc(1.5 / 1);
-      --text-lg: 1.125rem;
-      --text-lg--line-height: calc(1.75 / 1.125);
-      --text-xl: 1.25rem;
-      --text-xl--line-height: calc(1.75 / 1.25);
-      --text-2xl: 1.5rem;
-      --text-2xl--line-height: calc(2 / 1.5);
-      --text-3xl: 1.875rem;
-      --text-3xl--line-height: calc(2.25 / 1.875);
-      --text-4xl: 2.25rem;
-      --text-4xl--line-height: calc(2.5 / 2.25);
-      --text-5xl: 3rem;
-      --text-5xl--line-height: 1;
-      --text-6xl: 3.75rem;
-      --text-6xl--line-height: 1;
-      --text-7xl: 4.5rem;
-      --text-7xl--line-height: 1;
-      --text-8xl: 6rem;
-      --text-8xl--line-height: 1;
-      --text-9xl: 8rem;
-      --text-9xl--line-height: 1;
 
       --font-weight-thin: 100;
       --font-weight-extralight: 200;
@@ -1837,33 +1832,6 @@
       --container-6xl: 72rem;
       --container-7xl: 80rem;
 
-      --text-xs: 0.75rem;
-      --text-xs--line-height: calc(1 / 0.75);
-      --text-sm: 0.875rem;
-      --text-sm--line-height: calc(1.25 / 0.875);
-      --text-base: 1rem;
-      --text-base--line-height: calc(1.5 / 1);
-      --text-lg: 1.125rem;
-      --text-lg--line-height: calc(1.75 / 1.125);
-      --text-xl: 1.25rem;
-      --text-xl--line-height: calc(1.75 / 1.25);
-      --text-2xl: 1.5rem;
-      --text-2xl--line-height: calc(2 / 1.5);
-      --text-3xl: 1.875rem;
-      --text-3xl--line-height: calc(2.25 / 1.875);
-      --text-4xl: 2.25rem;
-      --text-4xl--line-height: calc(2.5 / 2.25);
-      --text-5xl: 3rem;
-      --text-5xl--line-height: 1;
-      --text-6xl: 3.75rem;
-      --text-6xl--line-height: 1;
-      --text-7xl: 4.5rem;
-      --text-7xl--line-height: 1;
-      --text-8xl: 6rem;
-      --text-8xl--line-height: 1;
-      --text-9xl: 8rem;
-      --text-9xl--line-height: 1;
-
       --font-weight-thin: 100;
       --font-weight-extralight: 200;
       --font-weight-light: 300;
@@ -1927,7 +1895,7 @@
 
       --animate-spin: spin 1s linear infinite;
       --animate-ping: ping 1s cubic-bezier(0, 0, 0.2, 1) infinite;
-      --animate-pulse: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+      --animate-pulse: pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
       --animate-bounce: bounce 1s infinite;
 
       --blur-xs: 4px;
@@ -1958,29 +1926,29 @@
       --radius: 0.5rem;
 
       /* Font sizes */
-      --font-size-xs: 0.75rem; /* 12px */
-      --font-size-sm: 0.875rem; /* 14px */
-      --font-size-base: 1rem; /* 16px */
-      --font-size-lg: 1.125rem; /* 18px */
-      --font-size-xl: 1.25rem; /* 20px */
-      --font-size-2xl: 1.5rem; /* 24px */
-      --font-size-3xl: 1.875rem; /* 30px */
-      --font-size-4xl: 2.25rem; /* 36px */
-      --font-size-5xl: 3rem; /* 48px */
-      --font-size-6xl: 3.75rem; /* 60px */
-      --font-size-7xl: 4.5rem; /* 72px */
-      --font-size-8xl: 6rem; /* 96px */
-      --font-size-9xl: 8rem; /* 128px */
+      --font-size-xs: 12px; /* 0.75rem */
+      --font-size-sm: 14px; /* 0.875rem */
+      --font-size-base: 14px; /* 1rem */
+      --font-size-lg: 18px; /* 1.125rem */
+      --font-size-xl: 20px; /* 1.25rem */
+      --font-size-2xl: 24px; /* 1.5rem */
+      --font-size-3xl: 30px; /* 1.875rem */
+      --font-size-4xl: 36px; /* 2.25rem */
+      --font-size-5xl: 48px; /* 3rem */
+      --font-size-6xl: 60px; /* 3.75rem */
+      --font-size-7xl: 72px; /* 4.5rem */
+      --font-size-8xl: 96px; /* 6rem */
+      --font-size-9xl: 128px; /* 8rem */
 
       /* Line heights */
-      --line-height-xs: 1rem; /* 16px */
-      --line-height-sm: 1.25rem; /* 20px */
-      --line-height-base: 1.5rem; /* 24px */
-      --line-height-lg: 1.75rem; /* 28px */
-      --line-height-xl: 1.75rem; /* 28px */
-      --line-height-2xl: 2rem; /* 32px */
-      --line-height-3xl: 2.25rem; /* 36px */
-      --line-height-4xl: 2.5rem; /* 40px */
+      --line-height-xs: 16px; /* 1rem */
+      --line-height-sm: 20px; /* 1.25rem */
+      --line-height-base: 20px; /* 1.5rem */
+      --line-height-lg: 28px; /* 1.75rem */
+      --line-height-xl: 28px; /* 1.75rem */
+      --line-height-2xl: 32px; /* 2rem */
+      --line-height-3xl: 36px; /* 2.25rem */
+      --line-height-4xl: 40px; /* 2.5rem */
       --line-height-tight: 1; /* For larger text */
 
       --background: oklch(1 0 0);
