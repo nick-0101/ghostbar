@@ -7,6 +7,8 @@ export interface IConversationMessage {
 
 export interface IExecuteQueryMessage {
   action: ISWAction;
-  prompt: string;
   history: IConversationMessage[];
+  aiModel: IAIModel;
 }
+
+export type IAIModel = "gpt-4.1" | "gpt-4.1-preview" | "gpt-4o-mini" | "gpt-4o";

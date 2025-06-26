@@ -18,10 +18,12 @@ const props = defineProps<{
 }>();
 
 const handleExecuteQuery = () => {
+  userConversationsStore.addUserQueryToConversation(searchQuery.value);
+
   sendMessage<IExecuteQueryMessage>({
     action: "executeQuery",
-    prompt: searchQuery.value,
-    history: Array.from(conversations.value.values()).flat(),
+    aiModel: userConversationsStore.selectedAiModel,
+    history: userConversationsStore.getConversationHistory(userConversationsStore.selectedConversationId),
   });
 };
 

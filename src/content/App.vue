@@ -8,11 +8,10 @@ import { storeToRefs } from "pinia";
 
 const { connectPort, onMessage, disconnectPort } = usePortStore();
 const userConversationsStore = useUserConversationsStore();
-const { conversations, currentQuery } = storeToRefs(userConversationsStore);
+const { conversations } = storeToRefs(userConversationsStore);
 const isVisible = ref(false);
 const streamedResponse = ref(""); // set to empty string, only "hello world in dev"
 const isStreaming = ref(false); //set to false, true only for dev
-const completeResponses = ref<any[]>([]);
 
 function toggleOverlay() {
   isVisible.value = !isVisible.value;
@@ -66,7 +65,10 @@ onMounted(() => {
         break;
       case "streamComplete":
         isStreaming.value = false;
-        completeResponses.value = msg.completeResponse;
+        userConversationsStore.addAssistantResponseToConversation(msg.completeResponse);
+        break;
+      case "steamError":
+        // TODO: handle error
         break;
       default:
         break;

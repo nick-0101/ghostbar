@@ -1,14 +1,13 @@
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted, ref } from "vue";
+import { onMounted, onUnmounted, ref } from "vue";
 import { useUserConversationsStore } from "@/stores/conversations";
-import { storeToRefs } from "pinia";
 import { usePortStore } from "@/stores/portStore";
+import type { IExecuteQueryMessage } from "@/types";
 
 const cursorPosition = ref({ x: window.innerWidth / 2, y: window.innerHeight - 100 });
 const isDragging = ref(false);
 const dragOffset = ref({ x: 0, y: 0 });
 const userConversationsStore = useUserConversationsStore();
-const { conversations } = storeToRefs(userConversationsStore);
 const { sendMessage } = usePortStore();
 const searchQuery = ref("");
 
@@ -18,9 +17,12 @@ const props = defineProps<{
 
 const handleExecuteQuery = () => {
   userConversationsStore.addUserQueryToConversation(`${searchQuery.value}\n\n${props.selectedText}`);
-  sendMessage({
+
+  console.log(userConversationsStore.selectedAiModel, userConversationsStore.getConversationHistory(userConversationsStore.selectedConversationId));
+  sendMessage<IExecuteQueryMessage>({
     action: "executeQuery",
-    history: conversations.value,
+    aiModel: userConversationsStore.selectedAiModel,
+    history: userConversationsStore.getConversationHistory(userConversationsStore.selectedConversationId),
   });
 };
 

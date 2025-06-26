@@ -56,28 +56,28 @@ chrome.runtime.onConnect.addListener((port) => {
               apiKey: storageRes.apiKey,
             });
 
+            console.log(msg.history);
             const stream = await client.responses.create({
-              model: "gpt-4.1",
-              input: [
-                ...msg.history,
-                {
-                  role: "user",
-                  content: `${msg.prompt}\n\n${msg.selectedText}`,
-                },
-              ],
+              model: msg.aiModel,
+              input: [...msg.history],
               stream: true,
             });
 
             for await (const chunk of stream) {
-              if (chunk.type === "response.output_text.delta") {
-                port.postMessage({ action: "streamResponse", aiResponse: chunk.delta });
+              switch (chunk.type) {
+                case "response.output_text.delta":
+                  port.postMessage({ action: "streamResponse", aiResponse: chunk.delta });
+                  break;
+                case "response.output_item.done":
+                  port.postMessage({
+                    action: "streamComplete",
+                    completeResponse: chunk?.item?.content?.[0]?.text || "",
+                  });
+                  break;
+                default:
+                  break;
               }
             }
-
-            port.postMessage({
-              action: "streamComplete",
-              completeResponse: "Stream completed",
-            });
 
             console.log("Streaming completed successfully");
           } catch (error) {

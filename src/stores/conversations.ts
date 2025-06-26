@@ -1,11 +1,12 @@
 import { defineStore } from "pinia";
-import { computed, ref } from "vue";
+import { ref } from "vue";
 import { v4 as uuidv4 } from "uuid";
-import type { IConversationMessage } from "@/types";
+import type { IConversationMessage, IAIModel } from "@/types";
 
 export const useUserConversationsStore = defineStore("userConversations", () => {
   const conversations = ref<Map<string, IConversationMessage[]>>(new Map());
   const selectedConversationId = ref<string>("");
+  const selectedAiModel = ref<IAIModel>("gpt-4o-mini");
 
   const addUserQueryToConversation = (query: string) => {
     if (!selectedConversationId.value) {
@@ -25,5 +26,14 @@ export const useUserConversationsStore = defineStore("userConversations", () => 
     }
   };
 
-  return { conversations, selectedConversationId, addUserQueryToConversation, addAssistantResponseToConversation };
+  const selectConversationAiModel = (model: IAIModel) => {
+    selectedAiModel.value = model;
+  };
+
+  const getConversationHistory = (conversationId: string) => {
+    const conversation = conversations.value.get(conversationId);
+    return conversation || [];
+  };
+
+  return { conversations, selectedConversationId, addUserQueryToConversation, addAssistantResponseToConversation, selectedAiModel, selectConversationAiModel, getConversationHistory };
 });
