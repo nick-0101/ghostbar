@@ -56,7 +56,6 @@ chrome.runtime.onConnect.addListener((port) => {
               apiKey: storageRes.apiKey,
             });
 
-            console.log(msg.history);
             const stream = await client.responses.create({
               model: msg.aiModel,
               input: [...msg.history],

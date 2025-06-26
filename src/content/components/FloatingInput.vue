@@ -18,7 +18,6 @@ const props = defineProps<{
 const handleExecuteQuery = () => {
   userConversationsStore.addUserQueryToConversation(`${searchQuery.value}\n\n${props.selectedText}`);
 
-  console.log(userConversationsStore.selectedAiModel, userConversationsStore.getConversationHistory(userConversationsStore.selectedConversationId));
   sendMessage<IExecuteQueryMessage>({
     action: "executeQuery",
     aiModel: userConversationsStore.selectedAiModel,

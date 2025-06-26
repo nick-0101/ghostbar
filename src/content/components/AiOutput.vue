@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, computed, watch, nextTick } from "vue";
-import { XIcon } from "lucide-vue-next";
+import { XIcon, SquarePenIcon } from "lucide-vue-next";
 import InlineInput from "./InlineInput.vue";
 import VueMarkdown from "vue-markdown-render";
 import MarkdownItHighlightjs from "markdown-it-highlightjs";
@@ -137,21 +137,23 @@ onUnmounted(() => {
     <div class="ghostbar-overlay-inner">
       <div class="ghostbar-overlay-content">
         <div class="ghostbar-header">
-          <button class="ghostbar-close Button" data-variant="ghost" type="submit" @click="toggleOutputOverlay">
+          <button class="ghostbar-close Button" data-variant="ghost" @click="toggleOutputOverlay">
             <XIcon :color="'var(--muted-foreground)'" :size="18" />
+          </button>
+
+          <button class="ghostbar-new-chat Button" data-variant="ghost" @click="toggleOutputOverlay">
+            <SquarePenIcon :color="'var(--muted-foreground)'" :size="18" />
           </button>
         </div>
 
-        <span v-if="isStreaming" class="streaming-indicator"></span>
+        <span v-if="isStreaming && !streamedResponse" class="streaming-indicator"></span>
         <div class="ghostbar-body">
-          <div v-if="streamedResponse" class="response-content">
-            <div v-if="streamedResponse" id="stream-response" class="response-text" ref="contentContainer">
-              <vue-markdown :source="streamedResponse" :plugins="vueMarkdownPlugins" />
-            </div>
+          <div v-if="streamedResponse" id="stream-response" class="response-text" ref="contentContainer">
+            <vue-markdown :source="streamedResponse" :plugins="vueMarkdownPlugins" />
           </div>
         </div>
       </div>
-      <div v-if="!isStreaming && streamedResponse" class="response-actions">
+      <div class="response-actions">
         <InlineInput selected-text="selectedText" />
       </div>
     </div>
