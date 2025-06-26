@@ -3,12 +3,16 @@ import { ref, onMounted, onUnmounted, onBeforeUnmount, watch } from "vue";
 import AiOutput from "./components/AiOutput.vue";
 import ContentSelector from "./components/ContentSelector.vue";
 import { usePortStore } from "@/stores/portStore";
+import { useUserConversationsStore } from "@/stores/conversations";
+import { storeToRefs } from "pinia";
 
+const { connectPort, onMessage, disconnectPort } = usePortStore();
+const userConversationsStore = useUserConversationsStore();
+const { conversations, currentQuery } = storeToRefs(userConversationsStore);
 const isVisible = ref(false);
 const streamedResponse = ref(""); // set to empty string, only "hello world in dev"
 const isStreaming = ref(false); //set to false, true only for dev
 const completeResponses = ref<any[]>([]);
-const { connectPort, sendMessage, onMessage, disconnectPort } = usePortStore();
 
 function toggleOverlay() {
   isVisible.value = !isVisible.value;
@@ -22,11 +26,6 @@ const messageListener = (message: any, sender: any, sendResponse: any) => {
 
   return true;
 };
-
-function clearResponse() {
-  streamedResponse.value = "";
-  isStreaming.value = false;
-}
 
 watch(isVisible, (newVal) => {
   if (newVal) {
@@ -59,7 +58,8 @@ onMounted(() => {
   onMessage((msg) => {
     switch (msg.action) {
       case "streamStart":
-        clearResponse();
+        streamedResponse.value = "";
+        isStreaming.value = true;
         break;
       case "streamResponse":
         streamedResponse.value += msg.aiResponse;
@@ -81,6 +81,6 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <AiOutput v-show="isStreaming || streamedResponse" :streamed-response="streamedResponse" :is-streaming="isStreaming" @clear="clearResponse" @update:toggleOutputOverlay="toggleOverlay" />
+  <AiOutput v-show="isStreaming || streamedResponse" :streamed-response="streamedResponse" :is-streaming="isStreaming" @update:toggleOutputOverlay="toggleOverlay" />
   <ContentSelector v-show="!isStreaming && !streamedResponse" :is-visible="isVisible" :streamed-response="streamedResponse" :is-streaming="isStreaming" @update:toggleOutputOverlay="toggleOverlay" />
 </template>

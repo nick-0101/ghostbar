@@ -1,25 +1,26 @@
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, ref } from "vue";
-import { useUserQueriesStore } from "@/stores/queries";
+import { useUserConversationsStore } from "@/stores/conversations";
 import { storeToRefs } from "pinia";
 import { usePortStore } from "@/stores/portStore";
 
 const cursorPosition = ref({ x: window.innerWidth / 2, y: window.innerHeight - 100 });
 const isDragging = ref(false);
 const dragOffset = ref({ x: 0, y: 0 });
-const userQueriesStore = useUserQueriesStore();
-const { queries, currentQuery } = storeToRefs(userQueriesStore);
+const userConversationsStore = useUserConversationsStore();
+const { conversations } = storeToRefs(userConversationsStore);
 const { sendMessage } = usePortStore();
+const searchQuery = ref("");
 
 const props = defineProps<{
   selectedText: string;
 }>();
 
 const handleExecuteQuery = () => {
+  userConversationsStore.addUserQueryToConversation(`${searchQuery.value}\n\n${props.selectedText}`);
   sendMessage({
     action: "executeQuery",
-    selectedText: props.selectedText,
-    prompt: currentQuery.value,
+    history: conversations.value,
   });
 };
 
@@ -66,7 +67,7 @@ onUnmounted(() => {
     @mousedown="handleMouseDown"
   >
     <div class="ghostbar-floating-input-container-inner Card">
-      <textarea id="ghostbar-floating-input-textarea" class="Textarea" type="text" placeholder="Ask anything" v-model="currentQuery" />
+      <textarea id="ghostbar-floating-input-textarea" class="Textarea" type="text" placeholder="Ask anything" v-model="searchQuery" />
       <!-- <input class="Input" type="text" placeholder="Ask anything" v-model="currentQuery" /> -->
       <button class="ghostbar-floating-input-search-button" @click.stop="handleExecuteQuery">
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">

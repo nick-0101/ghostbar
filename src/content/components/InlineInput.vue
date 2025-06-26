@@ -1,26 +1,27 @@
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, ref } from "vue";
-import { useUserQueriesStore } from "@/stores/queries";
+import { useUserConversationsStore } from "@/stores/conversations";
 import { storeToRefs } from "pinia";
 import { usePortStore } from "@/stores/portStore";
+import type { IExecuteQueryMessage } from "@/types";
 
 const cursorPosition = ref({ x: window.innerWidth / 2, y: window.innerHeight - 100 });
 const isDragging = ref(false);
 const dragOffset = ref({ x: 0, y: 0 });
-const userQueriesStore = useUserQueriesStore();
-const { queries, currentQuery } = storeToRefs(userQueriesStore);
+const userConversationsStore = useUserConversationsStore();
+const { conversations } = storeToRefs(userConversationsStore);
 const { sendMessage } = usePortStore();
-const chatQuery = ref("");
+const searchQuery = ref("");
 
 const props = defineProps<{
   selectedText: string;
 }>();
 
 const handleExecuteQuery = () => {
-  sendMessage({
+  sendMessage<IExecuteQueryMessage>({
     action: "executeQuery",
-    selectedText: props.selectedText,
-    prompt: chatQuery.value,
+    prompt: searchQuery.value,
+    history: Array.from(conversations.value.values()).flat(),
   });
 };
 
@@ -59,7 +60,7 @@ onUnmounted(() => {
 <template>
   <div class="ghostbar-inline-input-container" @mousedown="handleMouseDown">
     <div class="ghostbar-inline-input-container-inner Card">
-      <textarea id="ghostbar-inline-input-textarea" class="Textarea" type="text" placeholder="Ask anything" v-model="chatQuery" />
+      <textarea id="ghostbar-inline-input-textarea" class="Textarea" type="text" placeholder="Ask anything" v-model="searchQuery" />
       <button class="ghostbar-inline-input-search-button" @click.stop="handleExecuteQuery">
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="m5 12 7-7 7 7" />

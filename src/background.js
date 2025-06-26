@@ -59,6 +59,7 @@ chrome.runtime.onConnect.addListener((port) => {
             const stream = await client.responses.create({
               model: "gpt-4.1",
               input: [
+                ...msg.history,
                 {
                   role: "user",
                   content: `${msg.prompt}\n\n${msg.selectedText}`,

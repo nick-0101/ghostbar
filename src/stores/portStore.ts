@@ -13,9 +13,9 @@ export const usePortStore = defineStore("port", () => {
     return port;
   };
 
-  const sendMessage = (message: any) => {
+  const sendMessage = <T>(message: T) => {
     if (!port) connectPort();
-    port?.postMessage(message);
+    return port?.postMessage(message);
   };
 
   const disconnectPort = () => {
