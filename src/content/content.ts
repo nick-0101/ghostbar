@@ -29,7 +29,7 @@ document.head.appendChild(globalStyleElement);
 const fontCSS = `
   @font-face {
     font-family: "Geist";
-    src: url(${chrome.runtime.getURL("Geist.ttf")}) format("truetype");
+    src: url(${chrome.runtime.getURL("/src/content/Geist.ttf")}) format("truetype");
     font-weight: 500;
     font-style: normal;
     font-display: swap;
