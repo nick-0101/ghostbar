@@ -2,7 +2,7 @@
   font-display: swap;
   font-weight: 500;
   font-style: normal;
-  font-family: "Geist";
+  font-family: 'Geist';
 }
 
 @layer base {
@@ -43,7 +43,8 @@
       line-height: 1.5; /* 1 */
       -webkit-text-size-adjust: 100%; /* 2 */
       tab-size: 4; /* 3 */
-      font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"; /* 4 */
+      font-family: ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+        'Segoe UI Symbol', 'Noto Color Emoji'; /* 4 */
       font-feature-settings: normal; /* 5 */
       font-variation-settings: normal; /* 6 */
       -webkit-tap-highlight-color: transparent; /* 7 */
@@ -114,7 +115,8 @@
     kbd,
     samp,
     pre {
-      font-family: monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; /* 1 */
+      font-family: monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono',
+        'Courier New', monospace; /* 1 */
       font-feature-settings: normal; /* 2 */
       font-variation-settings: normal; /* 3 */
     }
@@ -281,7 +283,8 @@
   crash when using `color-mix(…)` with `currentcolor`. (https://github.com/tailwindlabs/tailwindcss/issues/17194)
 */
 
-    @supports (not (-webkit-appearance: -apple-pay-button)) /* Not Safari */ or (contain-intrinsic-size: 1px) /* Safari 17+ */ {
+    @supports (not (-webkit-appearance: -apple-pay-button)) /* Not Safari */ or
+      (contain-intrinsic-size: 1px) /* Safari 17+ */ {
       ::placeholder {
         color: color-mix(in oklab, currentcolor 50%, transparent);
       }
@@ -354,7 +357,7 @@
 */
 
     button,
-    input:where([type="button"], [type="reset"], [type="submit"]),
+    input:where([type='button'], [type='reset'], [type='submit']),
     ::file-selector-button {
       appearance: button;
     }
@@ -372,7 +375,7 @@
   Make elements with the HTML hidden attribute stay hidden by default.
 */
 
-    [hidden]:where(:not([hidden="until-found"])) {
+    [hidden]:where(:not([hidden='until-found'])) {
       display: none !important;
     }
   }
@@ -523,40 +526,40 @@
     box-shadow: none;
   }
 
-  .Button[data-variant="destructive"] {
+  .Button[data-variant='destructive'] {
     background-color: var(--destructive);
     color: var(--destructive-foreground);
     transition: background-color 0.2s ease;
   }
 
-  .Button[data-variant="destructive"]:hover {
+  .Button[data-variant='destructive']:hover {
     background-color: var(--destructive) / 0.9;
   }
 
-  .Button[data-variant="outline"] {
+  .Button[data-variant='outline'] {
     border: 1px solid var(--border);
     background-color: var(--background);
     color: var(--foreground);
     transition: background-color 0.2s ease, color 0.2s ease;
   }
 
-  .Button[data-variant="outline"]:hover {
+  .Button[data-variant='outline']:hover {
     cursor: pointer;
     background-color: var(--foreground) / 0.05;
     color: var(--accent-foreground);
   }
 
-  .Button[data-variant="secondary"] {
+  .Button[data-variant='secondary'] {
     background-color: var(--secondary);
     color: var(--secondary-foreground);
     transition: background-color 0.2s ease;
   }
 
-  .Button[data-variant="secondary"]:hover {
+  .Button[data-variant='secondary']:hover {
     background-color: var(--secondary) / 0.9;
   }
 
-  .Button[data-variant="ghost"] {
+  .Button[data-variant='ghost'] {
     background-color: transparent;
     border: 1px solid transparent;
     color: var(--foreground);
@@ -564,12 +567,12 @@
     align-items: center;
   }
 
-  .Button[data-variant="ghost"]:hover {
+  .Button[data-variant='ghost']:hover {
     background-color: var(--accent);
     color: var(--accent-foreground);
   }
 
-  .Button[data-variant="link"] {
+  .Button[data-variant='link'] {
     color: var(--foreground);
     background-color: transparent;
     text-decoration: none;
@@ -580,12 +583,12 @@
     width: max-content;
   }
 
-  .Button[data-variant="link"]:hover {
+  .Button[data-variant='link']:hover {
     color: var(--primary);
     text-decoration-color: var(--foreground);
   }
 
-  .Button[data-variant="icon"] {
+  .Button[data-variant='icon'] {
     background-color: var(--foreground);
     border: none;
     color: var(--background);
@@ -598,26 +601,26 @@
     border-radius: 9999px;
   }
 
-  .Button[data-variant="icon"]:hover {
+  .Button[data-variant='icon']:hover {
     background-color: var(--accent) / 0.8;
   }
 
   /* sizing */
-  .Button[data-size="sm"] {
+  .Button[data-size='sm'] {
     height: 2.25rem;
     border-radius: 0.375rem;
     padding-left: 0.75rem;
     padding-right: 0.75rem;
   }
 
-  .Button[data-size="lg"] {
+  .Button[data-size='lg'] {
     height: 2.75rem;
     border-radius: 0.375rem;
     padding-left: 2rem;
     padding-right: 2rem;
   }
 
-  .Button[data-size="icon"] {
+  .Button[data-size='icon'] {
     height: 2.5rem;
     width: 2.5rem;
   }
@@ -633,7 +636,7 @@
     font-size: var(--font-size-base);
     outline: none;
     transition: border-color 0.3s ease;
-    font-family: "Geist";
+    font-family: 'Geist';
   }
 
   .Textarea::placeholder {
@@ -662,9 +665,7 @@
   .popover {
     position: absolute;
     z-index: 999999;
-    background-color: var(--background);
-    border: 1px solid var(--border);
-    border-radius: 8px;
+    border-radius: var(--radius);
     box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
     max-width: 300px;
     min-width: 150px;
@@ -672,10 +673,13 @@
   }
 
   .popover-content {
-    padding: calc(var(--spacing) * 4);
+    background-color: var(--popover);
+    padding: calc(var(--spacing) * 1);
     color: var(--foreground);
     font-size: var(--font-size-sm);
     line-height: var(--line-height-base);
+    border-radius: var(--radius);
+    border: 1px solid #494949;
   }
 
   .popover-arrow {
@@ -683,6 +687,54 @@
     width: 0;
     height: 0;
     border: 6px solid transparent;
+  }
+
+  .popover-options {
+    min-width: 120px;
+  }
+
+  .popover-option-group {
+    gap: calc(var(--spacing) * 2);
+    display: grid;
+  }
+
+  .popover-label {
+    font-size: var(--font-size-xs);
+    font-weight: 600;
+    margin: 10px;
+    color: var(--muted-foreground);
+    margin: 0;
+    padding: calc(var(--spacing) * 1.5) calc(var(--spacing) * 2);
+  }
+
+  .popover-option {
+    display: block;
+    width: 100%;
+    border: none;
+    background: none;
+    text-align: left;
+    cursor: pointer;
+    border-radius: 4px;
+    padding: calc(var(--spacing) * 1.5) calc(var(--spacing) * 2);
+  }
+
+  .popover-option:hover {
+    background-color: var(--accent);
+    color: var(--accent-foreground);
+  }
+
+  .popover-option.active {
+    background-color: var(--accent);
+    color: var(--accent-foreground);
+  }
+
+  .popover-option-name {
+    font-size: var(--font-size-sm);
+  }
+
+  .popover-option-subtitle {
+    color: var(--muted-foreground);
+    font-size: var(--font-size-xs);
   }
 
   /* Arrow positions */
@@ -863,34 +915,6 @@
     margin-top: 10px;
   }
 
-  .model-options {
-    min-width: 120px;
-  }
-
-  .model-option {
-    display: block;
-    width: 100%;
-    padding: 8px 12px;
-    border: none;
-    background: none;
-    text-align: left;
-    cursor: pointer;
-    border-radius: 4px;
-    font-size: 14px;
-  }
-
-  .model-option:hover {
-    background-color: #f3f4f6;
-  }
-
-  .model-option.active {
-    background-color: #3b82f6;
-    color: white;
-  }
-
-  /* .ghostbar-inline-input-model-selector {
-  } */
-
   .ghostbar-inline-input-search-button {
     border-radius: 9999px;
     pointer-events: auto !important;
@@ -1069,7 +1093,7 @@
     display: flex;
     align-items: start;
     justify-content: start;
-    font-family: "Geist";
+    font-family: 'Geist';
     white-space: pre-wrap;
     margin: 0;
   }
@@ -1632,9 +1656,12 @@
 
       --text-shadow-2xs: 0px 1px 0px rgb(0 0 0 / 0.15);
       --text-shadow-xs: 0px 1px 1px rgb(0 0 0 / 0.2);
-      --text-shadow-sm: 0px 1px 0px rgb(0 0 0 / 0.075), 0px 1px 1px rgb(0 0 0 / 0.075), 0px 2px 2px rgb(0 0 0 / 0.075);
-      --text-shadow-md: 0px 1px 1px rgb(0 0 0 / 0.1), 0px 1px 2px rgb(0 0 0 / 0.1), 0px 2px 4px rgb(0 0 0 / 0.1);
-      --text-shadow-lg: 0px 1px 2px rgb(0 0 0 / 0.1), 0px 3px 2px rgb(0 0 0 / 0.1), 0px 4px 8px rgb(0 0 0 / 0.1);
+      --text-shadow-sm: 0px 1px 0px rgb(0 0 0 / 0.075), 0px 1px 1px rgb(0 0 0 / 0.075),
+        0px 2px 2px rgb(0 0 0 / 0.075);
+      --text-shadow-md: 0px 1px 1px rgb(0 0 0 / 0.1), 0px 1px 2px rgb(0 0 0 / 0.1),
+        0px 2px 4px rgb(0 0 0 / 0.1);
+      --text-shadow-lg: 0px 1px 2px rgb(0 0 0 / 0.1), 0px 3px 2px rgb(0 0 0 / 0.1),
+        0px 4px 8px rgb(0 0 0 / 0.1);
 
       --ease-in: cubic-bezier(0.4, 0, 1, 1);
       --ease-out: cubic-bezier(0, 0, 0.2, 1);
@@ -1730,9 +1757,12 @@
       --sidebar-accent-foreground: oklch(0.985 0 0);
       --sidebar-border: oklch(0.275 0 0);
       --sidebar-ring: oklch(0.439 0 0);
-      --font-sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-      --font-serif: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
-      --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --font-sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+        'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+        'Segoe UI Symbol', 'Noto Color Emoji';
+      --font-serif: ui-serif, Georgia, Cambria, 'Times New Roman', Times, serif;
+      --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono',
+        'Courier New', monospace;
       --radius: 0.625rem;
       --shadow-2xs: 0 1px 3px 0px hsl(0 0% 0% / 0.05);
       --shadow-xs: 0 1px 3px 0px hsl(0 0% 0% / 0.05);
@@ -2089,9 +2119,12 @@
 
       --text-shadow-2xs: 0px 1px 0px rgb(0 0 0 / 0.15);
       --text-shadow-xs: 0px 1px 1px rgb(0 0 0 / 0.2);
-      --text-shadow-sm: 0px 1px 0px rgb(0 0 0 / 0.075), 0px 1px 1px rgb(0 0 0 / 0.075), 0px 2px 2px rgb(0 0 0 / 0.075);
-      --text-shadow-md: 0px 1px 1px rgb(0 0 0 / 0.1), 0px 1px 2px rgb(0 0 0 / 0.1), 0px 2px 4px rgb(0 0 0 / 0.1);
-      --text-shadow-lg: 0px 1px 2px rgb(0 0 0 / 0.1), 0px 3px 2px rgb(0 0 0 / 0.1), 0px 4px 8px rgb(0 0 0 / 0.1);
+      --text-shadow-sm: 0px 1px 0px rgb(0 0 0 / 0.075), 0px 1px 1px rgb(0 0 0 / 0.075),
+        0px 2px 2px rgb(0 0 0 / 0.075);
+      --text-shadow-md: 0px 1px 1px rgb(0 0 0 / 0.1), 0px 1px 2px rgb(0 0 0 / 0.1),
+        0px 2px 4px rgb(0 0 0 / 0.1);
+      --text-shadow-lg: 0px 1px 2px rgb(0 0 0 / 0.1), 0px 3px 2px rgb(0 0 0 / 0.1),
+        0px 4px 8px rgb(0 0 0 / 0.1);
 
       --ease-in: cubic-bezier(0.4, 0, 1, 1);
       --ease-out: cubic-bezier(0, 0, 0.2, 1);
@@ -2187,9 +2220,12 @@
       --sidebar-accent-foreground: oklch(0.205 0 0);
       --sidebar-border: oklch(0.922 0 0);
       --sidebar-ring: oklch(0.708 0 0);
-      --font-sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-      --font-serif: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
-      --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --font-sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+        'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+        'Segoe UI Symbol', 'Noto Color Emoji';
+      --font-serif: ui-serif, Georgia, Cambria, 'Times New Roman', Times, serif;
+      --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono',
+        'Courier New', monospace;
       --radius: 0.625rem;
       --shadow-2xs: 0 1px 3px 0px hsl(0 0% 0% / 0.05);
       --shadow-xs: 0 1px 3px 0px hsl(0 0% 0% / 0.05);

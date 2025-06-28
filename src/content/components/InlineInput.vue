@@ -1,10 +1,9 @@
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, ref } from 'vue'
 import { useUserConversationsStore } from '@/stores/conversations'
-import { storeToRefs } from 'pinia'
 import { usePortStore } from '@/stores/portStore'
-import type { IExecuteQueryMessage } from '@/types'
 import Popover from './ui/Popover.vue'
+import type { IAIModel, IExecuteQueryMessage } from '@/types'
 
 const cursorPosition = ref({ x: window.innerWidth / 2, y: window.innerHeight - 100 })
 const isDragging = ref(false)
@@ -48,23 +47,39 @@ const handleMouseUp = () => {
 }
 
 const handlePopoverChange = (value: boolean) => {
-  console.log(value, 'from handlePopoverChange')
   isPopoverOpen.value = value
 }
 
 const availableAiModels = computed(() => {
   return [
     {
-      name: 'GPT-4o',
-      subtitle: 'Great for most tasks'
-    },
-    {
-      name: 'gpt-4o-mini',
-      subtitle: 'Smaller model, cheaper'
-    },
-    {
-      name: 'gpt-4.1',
-      subtitle: 'Newest model, best for complex tasks'
+      OpenAI: [
+        {
+          name: 'GPT-4o',
+          subtitle: 'Great for most tasks',
+          value: 'gpt-4o-2024-08-06' as IAIModel
+        },
+        {
+          name: 'o3',
+          subtitle: 'Smaller model, cheaper',
+          value: 'o3-2025-04-16' as IAIModel
+        },
+        {
+          name: 'o4-mini',
+          subtitle: 'Smaller model, cheaper',
+          value: 'o4-mini-2025-04-16' as IAIModel
+        },
+        {
+          name: 'GPT-4o-mini',
+          subtitle: 'Smaller model, cheaper',
+          value: 'o4-mini-2025-04-16' as IAIModel
+        },
+        {
+          name: 'GPT-4.1',
+          subtitle: 'Flagship GPT model for complex tasks',
+          value: 'gpt-4.1-2025-04-14' as IAIModel
+        }
+      ]
     }
   ]
 })
@@ -103,17 +118,26 @@ onUnmounted(() => {
             </button>
           </template>
 
-          <div class="model-options">
-            <button
-              v-for="model in availableAiModels"
-              :key="model.name"
-              class="model-option"
-              :class="{ active: userConversationsStore.selectedAiModel === model.name }"
-              @click="userConversationsStore.selectedAiModel = model.name"
-            >
-              <p>{{ model.name }}</p>
-              <p>{{ model.subtitle }}</p>
-            </button>
+          <div class="popover-options">
+            <div v-for="(provider, index) in availableAiModels" :key="index">
+              <div
+                v-for="[providerName, models] in Object.entries(provider)"
+                :key="providerName"
+                class="popover-option-group"
+              >
+                <p class="popover-label">{{ providerName }}</p>
+                <button
+                  v-for="(model, idx) in models"
+                  :key="model.name"
+                  class="popover-option"
+                  :class="{ active: userConversationsStore.selectedAiModel === model.name }"
+                  @click="userConversationsStore.selectedAiModel = model.value"
+                >
+                  <p class="popover-option-name">{{ model.name }}</p>
+                  <p class="popover-option-subtitle">{{ model.subtitle }}</p>
+                </button>
+              </div>
+            </div>
           </div>
         </Popover>
 
