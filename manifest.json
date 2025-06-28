@@ -23,7 +23,8 @@
     "toggle-ghostbar": {
       "suggested_key": {
         "default": "Alt+Shift+I",
-        "mac": "Alt+Shift+I"
+        "mac": "Alt+Shift+I",
+        "windows": "Alt+Shift+G"
       },
       "description": "Toggle GhostBar overlay"
     }
