@@ -1,12 +1,13 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import { v4 as uuidv4 } from 'uuid'
-import type { IConversationMessage, IAIModel } from '@/types'
+import { OpenAiModels } from '@/constants'
+import type { IAIModel, IConversationMessage } from '@/types'
 
 export const useUserConversationsStore = defineStore('userConversations', () => {
   const conversations = ref<Map<string, IConversationMessage[]>>(new Map())
   const selectedConversationId = ref<string>('')
-  const selectedAiModel = ref<IAIModel>('gpt-4o-2024-08-06')
+  const selectedAiModel = ref<IAIModel>(OpenAiModels[0])
 
   const addUserQueryToConversation = (query: string) => {
     if (!selectedConversationId.value) {

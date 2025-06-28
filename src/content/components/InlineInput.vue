@@ -3,7 +3,8 @@ import { computed, onMounted, onUnmounted, ref } from 'vue'
 import { useUserConversationsStore } from '@/stores/conversations'
 import { usePortStore } from '@/stores/portStore'
 import Popover from './ui/Popover.vue'
-import type { IAIModel, IExecuteQueryMessage } from '@/types'
+import { OpenAiModels } from '@/constants'
+import type { IExecuteQueryMessage } from '@/types'
 
 const cursorPosition = ref({ x: window.innerWidth / 2, y: window.innerHeight - 100 })
 const isDragging = ref(false)
@@ -18,7 +19,7 @@ const handleExecuteQuery = () => {
 
   sendMessage<IExecuteQueryMessage>({
     action: 'executeQuery',
-    aiModel: userConversationsStore.selectedAiModel,
+    aiModel: userConversationsStore.selectedAiModel.name,
     history: userConversationsStore.getConversationHistory(
       userConversationsStore.selectedConversationId
     )
@@ -53,33 +54,7 @@ const handlePopoverChange = (value: boolean) => {
 const availableAiModels = computed(() => {
   return [
     {
-      OpenAI: [
-        {
-          name: 'GPT-4o',
-          subtitle: 'Great for most tasks',
-          value: 'gpt-4o-2024-08-06' as IAIModel
-        },
-        {
-          name: 'o3',
-          subtitle: 'Smaller model, cheaper',
-          value: 'o3-2025-04-16' as IAIModel
-        },
-        {
-          name: 'o4-mini',
-          subtitle: 'Smaller model, cheaper',
-          value: 'o4-mini-2025-04-16' as IAIModel
-        },
-        {
-          name: 'GPT-4o-mini',
-          subtitle: 'Smaller model, cheaper',
-          value: 'o4-mini-2025-04-16' as IAIModel
-        },
-        {
-          name: 'GPT-4.1',
-          subtitle: 'Flagship GPT model for complex tasks',
-          value: 'gpt-4.1-2025-04-14' as IAIModel
-        }
-      ]
+      OpenAI: [...OpenAiModels]
     }
   ]
 })
@@ -130,11 +105,11 @@ onUnmounted(() => {
                   v-for="(model, idx) in models"
                   :key="model.name"
                   class="popover-option"
-                  :class="{ active: userConversationsStore.selectedAiModel === model.name }"
-                  @click="userConversationsStore.selectedAiModel = model.value"
+                  :class="{ active: userConversationsStore.selectedAiModel.name === model.name }"
+                  @click="userConversationsStore.selectedAiModel = model"
                 >
-                  <p class="popover-option-name">{{ model.name }}</p>
-                  <p class="popover-option-subtitle">{{ model.subtitle }}</p>
+                  <p class="popover-option-name">{{ model.label }}</p>
+                  <p class="popover-option-subtitle">{{ model.description }}</p>
                 </button>
               </div>
             </div>
