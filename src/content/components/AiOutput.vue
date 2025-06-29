@@ -35,6 +35,12 @@ watch(
   }
 )
 
+const handleScroll = () => {
+  if (contentContainer.value) {
+  }
+  console.log('scroll')
+}
+
 function handleKeyDown(e: KeyboardEvent) {
   e.stopPropagation()
 
@@ -86,12 +92,14 @@ function toggleOutputOverlay() {
 
 // Get the shadow root's document for event listeners
 onMounted(() => {
+  document.addEventListener('scroll', handleScroll)
   document.addEventListener('keydown', handleKeyDown as EventListener)
   window.addEventListener('mousemove', handleMouseMove)
   window.addEventListener('mouseup', handleMouseUp)
 })
 
 onUnmounted(() => {
+  document.removeEventListener('scroll', handleScroll)
   document.removeEventListener('keydown', handleKeyDown as EventListener)
   window.removeEventListener('mousemove', handleMouseMove)
   window.removeEventListener('mouseup', handleMouseUp)
@@ -125,12 +133,11 @@ onUnmounted(() => {
         </div>
 
         <span v-if="isStreaming && !streamedResponse" class="streaming-indicator"></span>
-        <div class="ghostbar-body">
+        <div class="ghostbar-body" ref="contentContainer">
           <div
             v-if="streamedResponse && !streamingError"
             id="stream-response"
             class="response-text"
-            ref="contentContainer"
           >
             <vue-markdown :source="streamedResponse" :plugins="vueMarkdownPlugins" />
           </div>
