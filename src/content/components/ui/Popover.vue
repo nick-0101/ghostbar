@@ -71,71 +71,77 @@ const calculatePosition = () => {
 
   switch (props.placement) {
     case 'top':
-      top = triggerRect.top - popoverRect.height - baseOffset
-      left = triggerRect.left + triggerRect.width / 2 - popoverRect.width / 2
+      top = -popoverRect.height - baseOffset
+      left = triggerRect.width / 2 - popoverRect.width / 2
 
       break
     case 'top-start':
-      top = triggerRect.top - popoverRect.height - baseOffset
-      left = triggerRect.left
+      top = -popoverRect.height - baseOffset
+      left = 0
       break
     case 'top-end':
-      top = triggerRect.top - popoverRect.height - baseOffset
-      left = triggerRect.right - popoverRect.width
+      top = -popoverRect.height - baseOffset
+      left = triggerRect.width - popoverRect.width
 
       break
     case 'bottom':
-      top = triggerRect.bottom + baseOffset
-      left = triggerRect.left + triggerRect.width / 2 - popoverRect.width / 2
+      top = triggerRect.height + baseOffset
+      left = triggerRect.width / 2 - popoverRect.width / 2
 
       break
     case 'bottom-start':
-      top = triggerRect.bottom + baseOffset
-      left = triggerRect.left
+      top = triggerRect.height + baseOffset
+      left = 0
 
       break
     case 'bottom-end':
-      top = triggerRect.bottom + baseOffset
-      left = triggerRect.right - popoverRect.width
+      top = triggerRect.height + baseOffset
+      left = triggerRect.width - popoverRect.width
 
       break
     case 'left':
-      top = triggerRect.top + triggerRect.height / 2 - popoverRect.height / 1.5
-      left = triggerRect.left - popoverRect.width - baseOffset
+      top = triggerRect.height / 2 - popoverRect.height / 2
+      left = -popoverRect.width - baseOffset
 
       break
     case 'left-start':
-      top = triggerRect.top
-      left = triggerRect.left - popoverRect.width - baseOffset
+      top = 0
+      left = -popoverRect.width - baseOffset
 
       break
     case 'left-end':
-      top = triggerRect.bottom - popoverRect.height
-      left = triggerRect.left - popoverRect.width - baseOffset
+      top = triggerRect.height - popoverRect.height
+      left = -popoverRect.width - baseOffset
 
       break
     case 'right':
-      top = triggerRect.top + triggerRect.height / 2 - popoverRect.height / 2
-      left = triggerRect.right + baseOffset
+      top = triggerRect.height / 2 - popoverRect.height / 2
+      left = triggerRect.width + baseOffset
 
       break
     case 'right-start':
-      top = triggerRect.top
-      left = triggerRect.right + baseOffset
+      top = 0
+      left = triggerRect.width + baseOffset
 
       break
     case 'right-end':
-      top = triggerRect.bottom - popoverRect.height
-      left = triggerRect.right + baseOffset
+      top = triggerRect.height - popoverRect.height
+      left = triggerRect.width + baseOffset
 
       break
   }
 
-  // Ensure popover stays within viewport
-  if (left < 0) left = 8
-  if (left + popoverRect.width > viewportWidth) left = viewportWidth - popoverRect.width - 8
-  if (top < 0) top = 8
-  if (top + popoverRect.height > viewportHeight) top = viewportHeight - popoverRect.height - 8
+  // Ensure popover stays within viewport bounds
+  const containerRect = triggerRef.value.getBoundingClientRect()
+  const popoverLeft = containerRect.left + left
+  const popoverTop = containerRect.top + top
+
+  if (popoverLeft < 0) left = -containerRect.left + 8
+  if (popoverLeft + popoverRect.width > viewportWidth)
+    left = viewportWidth - containerRect.left - popoverRect.width - 8
+  if (popoverTop < 0) top = -containerRect.top + 8
+  if (popoverTop + popoverRect.height > viewportHeight)
+    top = viewportHeight - containerRect.top - popoverRect.height - 8
 
   position.value = { top, left }
 }

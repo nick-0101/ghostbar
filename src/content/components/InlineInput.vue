@@ -88,7 +88,7 @@ onUnmounted(() => {
       <div class="ghostbar-inline-input-actions-container">
         <Popover
           trigger="click"
-          placement="left"
+          placement="bottom"
           :open="isPopoverOpen"
           @update:open="handlePopoverChange"
         >

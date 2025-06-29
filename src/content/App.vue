@@ -9,7 +9,7 @@ import { storeToRefs } from 'pinia'
 const { connectPort, onMessage, disconnectPort } = usePortStore()
 const userConversationsStore = useUserConversationsStore()
 const isVisible = ref(false)
-const streamedResponse = ref('') // set to empty string, only "hello world in dev"
+const streamedResponse = ref('Hello World') // set to empty string, only "hello world in dev"
 const isStreaming = ref(false) //set to false, true only for dev
 const streamingError = ref('')
 

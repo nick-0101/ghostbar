@@ -656,6 +656,7 @@
   /* Popover.vue */
   .popover-container {
     display: inline-block;
+    position: relative;
   }
 
   .popover-trigger {
