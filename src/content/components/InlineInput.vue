@@ -83,13 +83,13 @@ onUnmounted(() => {
       <div class="ghostbar-inline-input-actions-container">
         <Popover
           trigger="click"
-          placement="top"
+          placement="left"
           :open="isPopoverOpen"
           @update:open="handlePopoverChange"
         >
           <template #trigger>
             <button class="ghostbar-inline-input-model-selector Button" data-variant="ghost">
-              Model: {{ userConversationsStore.selectedAiModel }}
+              Model: {{ userConversationsStore.selectedAiModel.label }}
             </button>
           </template>
 

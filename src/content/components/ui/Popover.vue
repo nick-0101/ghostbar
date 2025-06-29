@@ -34,6 +34,11 @@ const popoverRef = ref<HTMLElement>()
 const triggerRef = ref<HTMLElement>()
 const position = ref({ top: 0, left: 0 })
 
+const getShadowDocument = () => {
+  const shadowHost = document.getElementById('ghostbar-shadow-host')
+  return shadowHost?.shadowRoot || document
+}
+
 // Update isOpen when prop changes
 watch(
   () => props.open,
@@ -52,9 +57,6 @@ const togglePopover = () => {
 }
 
 const calculatePosition = () => {
-  console.log(triggerRef.value, 'triggerRef')
-  console.log(popoverRef.value, 'popoverRef')
-
   if (!triggerRef.value || !popoverRef.value) return
 
   const triggerRect = triggerRef.value.getBoundingClientRect()
@@ -66,11 +68,6 @@ const calculatePosition = () => {
   let left = 0
 
   const baseOffset = props.offset
-
-  console.log(triggerRect, 'triggerRect')
-  console.log(popoverRect, 'popoverRect')
-  console.log(viewportWidth, 'viewportWidth')
-  console.log(viewportHeight, 'viewportHeight')
 
   switch (props.placement) {
     case 'top':
@@ -103,7 +100,7 @@ const calculatePosition = () => {
 
       break
     case 'left':
-      top = triggerRect.top + triggerRect.height / 2 - popoverRect.height / 2
+      top = triggerRect.top + triggerRect.height / 2 - popoverRect.height / 1.5
       left = triggerRect.left - popoverRect.width - baseOffset
 
       break
@@ -148,13 +145,12 @@ const closePopover = () => {
 }
 
 const handleClickOutside = (event: Event) => {
-  //   console.log(props.open, "from handleClickOutside");
-  //   if (props.trigger === "click" && props.open) {
-  //     const target = event.target as HTMLElement;
-  //     if (!popoverRef.value?.contains(target) && !triggerRef.value?.contains(target)) {
-  //       closePopover();
-  //     }
-  //   }
+  if (props.trigger === 'click' && props.open) {
+    const target = event.target as HTMLElement
+    if (!popoverRef.value?.contains(target) && !triggerRef.value?.contains(target)) {
+      closePopover()
+    }
+  }
 }
 
 const handleKeyDown = (event: KeyboardEvent) => {
@@ -164,15 +160,17 @@ const handleKeyDown = (event: KeyboardEvent) => {
 }
 
 onMounted(() => {
-  document.addEventListener('click', handleClickOutside)
-  document.addEventListener('keydown', handleKeyDown)
+  const shadowDocument = getShadowDocument()
+  shadowDocument.addEventListener('click', handleClickOutside as EventListener)
+  shadowDocument.addEventListener('keydown', handleKeyDown as EventListener)
   window.addEventListener('resize', calculatePosition)
   window.addEventListener('scroll', calculatePosition)
 })
 
 onUnmounted(() => {
-  document.removeEventListener('click', handleClickOutside)
-  document.removeEventListener('keydown', handleKeyDown)
+  const shadowDocument = getShadowDocument()
+  shadowDocument.removeEventListener('click', handleClickOutside as EventListener)
+  shadowDocument.removeEventListener('keydown', handleKeyDown as EventListener)
   window.removeEventListener('resize', calculatePosition)
   window.removeEventListener('scroll', calculatePosition)
 })
