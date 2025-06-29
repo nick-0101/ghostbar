@@ -1066,6 +1066,13 @@
     animation: var(--animate-pulse);
   }
 
+  .streaming-error {
+    color: var(--color-red-500);
+    padding: 15px 20px;
+    font-size: var(--font-size-base);
+    line-height: var(--line-height-lg);
+  }
+
   .response-header {
     display: flex;
     justify-content: flex-end;

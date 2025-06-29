@@ -8,6 +8,7 @@ import MarkdownItHighlightjs from 'markdown-it-highlightjs'
 interface Props {
   streamedResponse: string
   isStreaming: boolean
+  streamingError?: string
 }
 
 const props = defineProps<Props>()
@@ -161,12 +162,17 @@ onUnmounted(() => {
         <span v-if="isStreaming && !streamedResponse" class="streaming-indicator"></span>
         <div class="ghostbar-body">
           <div
-            v-if="streamedResponse"
+            v-if="streamedResponse && !streamingError"
             id="stream-response"
             class="response-text"
             ref="contentContainer"
           >
             <vue-markdown :source="streamedResponse" :plugins="vueMarkdownPlugins" />
+          </div>
+          <div v-if="streamingError" class="streaming-error">
+            <p>
+              {{ streamingError }}
+            </p>
           </div>
         </div>
       </div>

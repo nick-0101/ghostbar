@@ -4,7 +4,7 @@ import { useUserConversationsStore } from '@/stores/conversations'
 import { usePortStore } from '@/stores/portStore'
 import Popover from './ui/Popover.vue'
 import { OpenAiModels } from '@/constants'
-import type { IExecuteQueryMessage } from '@/types'
+import type { IAIModel, IExecuteQueryMessage } from '@/types'
 
 const cursorPosition = ref({ x: window.innerWidth / 2, y: window.innerHeight - 100 })
 const isDragging = ref(false)
@@ -49,6 +49,11 @@ const handleMouseUp = () => {
 
 const handlePopoverChange = (value: boolean) => {
   isPopoverOpen.value = value
+}
+
+const handleAiModelChange = (model: IAIModel) => {
+  userConversationsStore.selectedAiModel = model
+  isPopoverOpen.value = false
 }
 
 const availableAiModels = computed(() => {
@@ -106,7 +111,7 @@ onUnmounted(() => {
                   :key="model.name"
                   class="popover-option"
                   :class="{ active: userConversationsStore.selectedAiModel.name === model.name }"
-                  @click="userConversationsStore.selectedAiModel = model"
+                  @click="handleAiModelChange(model)"
                 >
                   <p class="popover-option-name">{{ model.label }}</p>
                   <p class="popover-option-subtitle">{{ model.description }}</p>
