@@ -5,6 +5,8 @@ import InlineInput from './InlineInput.vue'
 import VueMarkdown from 'vue-markdown-render'
 import MarkdownItHighlightjs from 'markdown-it-highlightjs'
 import { getShadowDocument } from '@/lib/utils'
+import { useUserConversationsStore } from '@/stores/conversations'
+import { storeToRefs } from 'pinia'
 
 interface Props {
   streamedResponse: string
@@ -17,6 +19,14 @@ const emit = defineEmits<{
   'update:toggleOutputOverlay': []
 }>()
 
+const userConversationsStore = useUserConversationsStore()
+const { conversations } = storeToRefs(userConversationsStore)
+
+// Convert Map to array for better reactivity
+const conversationsArray = computed(() => {
+  return Array.from(conversations.value.entries())
+})
+
 const vueMarkdownPlugins = [MarkdownItHighlightjs]
 const isDragging = ref(false)
 // const position = ref({ x: 0, y: -100 });
@@ -28,7 +38,7 @@ const userScrolled = ref(false)
 
 // Auto-scroll to bottom as new content arrives
 watch(
-  () => props.streamedResponse,
+  () => [props.streamedResponse, props.isStreaming],
   async () => {
     await nextTick()
     if (contentContainer.value && !userScrolled.value) {
@@ -158,6 +168,18 @@ onUnmounted(() => {
 
         <span v-if="isStreaming && !streamedResponse" class="streaming-indicator"></span>
         <div class="ghostbar-body" ref="contentContainer">
+          <div v-for="[conversationId, conversation] in conversationsArray" :key="conversationId">
+            <div v-for="(message, index) in conversation" :key="`${conversationId}-${index}`">
+              <div v-if="message.role === 'user'" class="user-query">
+                <p>{{ message.content }}</p>
+              </div>
+
+              <div v-if="message.role === 'assistant'" id="stream-response" class="response-text">
+                <vue-markdown :source="message.content" :plugins="vueMarkdownPlugins" />
+              </div>
+            </div>
+          </div>
+
           <div
             v-if="streamedResponse && !streamingError"
             id="stream-response"

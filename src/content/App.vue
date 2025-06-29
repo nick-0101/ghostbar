@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, onBeforeUnmount, watch } from 'vue'
+import { ref, onMounted, onBeforeUnmount, watch } from 'vue'
 import AiOutput from './components/AiOutput.vue'
 import ContentSelector from './components/ContentSelector.vue'
 import { usePortStore } from '@/stores/portStore'

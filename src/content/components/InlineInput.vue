@@ -24,6 +24,8 @@ const handleExecuteQuery = () => {
       userConversationsStore.selectedConversationId
     )
   })
+
+  searchQuery.value = ''
 }
 
 const handleMouseDown = (event: MouseEvent) => {
