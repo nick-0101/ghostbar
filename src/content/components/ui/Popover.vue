@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { getShadowDocument } from '@/lib/utils'
 import { ref, onMounted, onUnmounted, nextTick, watch } from 'vue'
 
 interface Props {
@@ -33,11 +34,6 @@ const emit = defineEmits<{
 const popoverRef = ref<HTMLElement>()
 const triggerRef = ref<HTMLElement>()
 const position = ref({ top: 0, left: 0 })
-
-const getShadowDocument = () => {
-  const shadowHost = document.getElementById('ghostbar-shadow-host')
-  return shadowHost?.shadowRoot || document
-}
 
 // Update isOpen when prop changes
 watch(

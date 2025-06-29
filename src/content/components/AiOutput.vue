@@ -4,6 +4,7 @@ import { XIcon, SquarePenIcon } from 'lucide-vue-next'
 import InlineInput from './InlineInput.vue'
 import VueMarkdown from 'vue-markdown-render'
 import MarkdownItHighlightjs from 'markdown-it-highlightjs'
+import { getShadowDocument } from '@/lib/utils'
 
 interface Props {
   streamedResponse: string
@@ -23,13 +24,14 @@ const cursorPosition = ref({ x: window.innerWidth / 2, y: 100 })
 const dragOffset = ref({ x: 0, y: 0 })
 const moveSpeed = 10
 const contentContainer = ref<HTMLElement>()
+const userScrolled = ref(false)
 
 // Auto-scroll to bottom as new content arrives
 watch(
   () => props.streamedResponse,
   async () => {
     await nextTick()
-    if (contentContainer.value) {
+    if (contentContainer.value && !userScrolled.value) {
       contentContainer.value.scrollTop = contentContainer.value.scrollHeight
     }
   }
@@ -37,8 +39,19 @@ watch(
 
 const handleScroll = () => {
   if (contentContainer.value) {
+    const { scrollTop, scrollHeight, clientHeight } = contentContainer.value
+    const isAtBottom = scrollTop + clientHeight >= scrollHeight - 10 // 10px threshold
+
+    // If user scrolls away from bottom, mark as user-scrolled
+    if (!isAtBottom && !userScrolled.value) {
+      userScrolled.value = true
+    }
+
+    // If user scrolls back to bottom, re-enable auto-scroll
+    if (isAtBottom && userScrolled.value) {
+      userScrolled.value = false
+    }
   }
-  console.log('scroll')
 }
 
 function handleKeyDown(e: KeyboardEvent) {
@@ -91,18 +104,29 @@ function toggleOutputOverlay() {
 }
 
 // Get the shadow root's document for event listeners
-onMounted(() => {
-  document.addEventListener('scroll', handleScroll)
-  document.addEventListener('keydown', handleKeyDown as EventListener)
+onMounted(async () => {
+  const shadowDocument = getShadowDocument()
+  shadowDocument.addEventListener('keydown', handleKeyDown as EventListener)
   window.addEventListener('mousemove', handleMouseMove)
   window.addEventListener('mouseup', handleMouseUp)
+
+  // Add scroll listener to the actual scrollable element
+  await nextTick()
+  if (contentContainer.value) {
+    contentContainer.value.addEventListener('scroll', handleScroll)
+  }
 })
 
 onUnmounted(() => {
-  document.removeEventListener('scroll', handleScroll)
-  document.removeEventListener('keydown', handleKeyDown as EventListener)
+  const shadowDocument = getShadowDocument()
+  shadowDocument.removeEventListener('keydown', handleKeyDown as EventListener)
   window.removeEventListener('mousemove', handleMouseMove)
   window.removeEventListener('mouseup', handleMouseUp)
+
+  // Remove scroll listener from the scrollable element
+  if (contentContainer.value) {
+    contentContainer.value.removeEventListener('scroll', handleScroll)
+  }
 })
 </script>
 
