@@ -35,48 +35,20 @@ watch(
   }
 )
 
-// Copy response to clipboard
-// const copyToClipboard = async () => {
-//   try {
-//     await navigator.clipboard.writeText(props.streamedResponse);
-//     console.log("Response copied to clipboard");
-//   } catch (err) {
-//     console.error("Failed to copy to clipboard:", err);
-//   }
-// };
-
-// // Clear the response
-// const clearResponse = () => {
-//   emit("clear");
-// };
-
-// function updatePosition() {
-//   const overlay = document.getElementById("ghostbar-overlay");
-//   if (overlay) {
-//     overlay.style.transform = `translate(calc(-50% + ${position.value.x}px), calc(-50% + ${position.value.y}px))`;
-//   }
-// }
-
 function handleKeyDown(e: KeyboardEvent) {
+  e.stopPropagation()
+
   switch (e.key) {
-    // case "ArrowUp":
-    //   position.value.y -= moveSpeed;
-    //   break;
-    // case "ArrowDown":
-    //   position.value.y += moveSpeed;
-    //   break;
-    // case "ArrowLeft":
-    //   position.value.x -= moveSpeed;
-    //   break;
-    // case "ArrowRight":
-    //   position.value.x += moveSpeed;
-    //   break;
+    case 'ArrowLeft':
+      cursorPosition.value.x -= moveSpeed
+      break
+    case 'ArrowRight':
+      cursorPosition.value.x += moveSpeed
+      break
     case 'Escape':
       toggleOutputOverlay()
       return
   }
-
-  // updatePosition();
 }
 
 const handleMouseDown = (event: MouseEvent) => {
@@ -113,21 +85,14 @@ function toggleOutputOverlay() {
 }
 
 // Get the shadow root's document for event listeners
-const getShadowDocument = () => {
-  const shadowHost = document.getElementById('ghostbar-shadow-host')
-  return shadowHost?.shadowRoot || document
-}
-
 onMounted(() => {
-  const shadowDocument = getShadowDocument()
-  shadowDocument.addEventListener('keydown', handleKeyDown as EventListener)
+  document.addEventListener('keydown', handleKeyDown as EventListener)
   window.addEventListener('mousemove', handleMouseMove)
   window.addEventListener('mouseup', handleMouseUp)
 })
 
 onUnmounted(() => {
-  const shadowDocument = getShadowDocument()
-  shadowDocument.removeEventListener('keydown', handleKeyDown as EventListener)
+  document.removeEventListener('keydown', handleKeyDown as EventListener)
   window.removeEventListener('mousemove', handleMouseMove)
   window.removeEventListener('mouseup', handleMouseUp)
 })
