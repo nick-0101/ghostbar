@@ -9,14 +9,15 @@ const isDragging = ref(false)
 const dragOffset = ref({ x: 0, y: 0 })
 const userConversationsStore = useUserConversationsStore()
 const { sendMessage } = usePortStore()
-const searchQuery = ref('')
 
 const props = defineProps<{
   selectedText: string
 }>()
 
 const handleExecuteQuery = () => {
-  userConversationsStore.addUserQueryToConversation(`${searchQuery.value}\n\n${props.selectedText}`)
+  userConversationsStore.addUserQueryToConversation(
+    `${userConversationsStore.floatingInputQuery}\n\n${props.selectedText}`
+  )
 
   sendMessage<IExecuteQueryMessage>({
     action: 'executeQuery',
@@ -75,7 +76,7 @@ onUnmounted(() => {
         class="Textarea"
         type="text"
         placeholder="Ask anything"
-        v-model="searchQuery"
+        v-model="userConversationsStore.floatingInputQuery"
       />
       <!-- <input class="Input" type="text" placeholder="Ask anything" v-model="currentQuery" /> -->
       <button class="ghostbar-floating-input-search-button" @click.stop="handleExecuteQuery">

@@ -11,11 +11,10 @@ const isDragging = ref(false)
 const dragOffset = ref({ x: 0, y: 0 })
 const userConversationsStore = useUserConversationsStore()
 const { sendMessage } = usePortStore()
-const searchQuery = ref('')
 const isPopoverOpen = ref(false)
 
 const handleExecuteQuery = () => {
-  userConversationsStore.addUserQueryToConversation(searchQuery.value)
+  userConversationsStore.addUserQueryToConversation(userConversationsStore.inlineInputQuery)
 
   sendMessage<IExecuteQueryMessage>({
     action: 'executeQuery',
@@ -25,7 +24,7 @@ const handleExecuteQuery = () => {
     )
   })
 
-  searchQuery.value = ''
+  userConversationsStore.inlineInputQuery = ''
 }
 
 const handleMouseDown = (event: MouseEvent) => {
@@ -85,7 +84,7 @@ onUnmounted(() => {
         class="Textarea"
         type="text"
         placeholder="Ask anything"
-        v-model="searchQuery"
+        v-model="userConversationsStore.inlineInputQuery"
       />
       <div class="ghostbar-inline-input-actions-container">
         <Popover

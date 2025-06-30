@@ -1,10 +1,9 @@
 <script setup lang="ts">
-import { ref, onMounted, onBeforeUnmount, watch } from 'vue'
+import { ref, onMounted, onBeforeUnmount, watch, onUnmounted } from 'vue'
 import AiOutput from './components/AiOutput.vue'
 import ContentSelector from './components/ContentSelector.vue'
 import { usePortStore } from '@/stores/portStore'
 import { useUserConversationsStore } from '@/stores/conversations'
-import { storeToRefs } from 'pinia'
 
 const { connectPort, onMessage, disconnectPort } = usePortStore()
 const userConversationsStore = useUserConversationsStore()
@@ -12,7 +11,7 @@ const isVisible = ref(false)
 const isStreaming = ref(false)
 const streamingError = ref('')
 
-function toggleOverlay() {
+const toggleOverlay = () => {
   isVisible.value = !isVisible.value
 }
 
@@ -23,6 +22,16 @@ const messageListener = (message: any, sender: any, sendResponse: any) => {
   }
 
   return true
+}
+
+const handleKeyDown = async (event: KeyboardEvent) => {
+  if (event.key === 'Escape' && isVisible.value) {
+    toggleOverlay()
+    userConversationsStore.clearConversation()
+    await chrome.runtime.sendMessage({
+      action: 'clearConversation'
+    })
+  }
 }
 
 watch(isVisible, newVal => {
@@ -44,9 +53,10 @@ watch(isVisible, newVal => {
 })
 
 onMounted(() => {
+  document.addEventListener('keydown', handleKeyDown)
+
   chrome.runtime.onMessage.addListener((message: any) => {
     if (message.action === 'toggleOverlay') {
-      console.log('toggleOverlay', message.isVisible)
       isVisible.value = message.isVisible
     }
 
@@ -75,6 +85,10 @@ onMounted(() => {
 onBeforeUnmount(() => {
   chrome.runtime.onMessage.removeListener(messageListener)
   disconnectPort()
+})
+
+onUnmounted(() => {
+  document.removeEventListener('keydown', handleKeyDown)
 })
 </script>
 

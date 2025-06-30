@@ -27,9 +27,8 @@ chrome.commands.onCommand.addListener(command => {
   }
 })
 
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+chrome.runtime.onMessage.addListener(request => {
   if (request.action === 'clearConversation') {
-    console.log('clearConversation')
     chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
       const activeTab = tabs[0]
       if (activeTab.id) {

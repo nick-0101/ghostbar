@@ -1031,7 +1031,7 @@
     justify-content: space-between;
     user-select: none;
     flex-shrink: 0;
-    padding: 10px 15px 0 15px;
+    padding: 10px 15px 10px 15px;
   }
 
   .ghostbar-close {
@@ -1149,6 +1149,11 @@
     font-size: var(--font-size-base);
     line-height: var(--line-height-lg);
     color: var(--muted-foreground);
+  }
+
+  .response-text ul li p,
+  .response-text ol li p {
+    display: inline;
   }
 
   .response-text h1 {

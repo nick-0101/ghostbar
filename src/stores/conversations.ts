@@ -8,6 +8,8 @@ export const useUserConversationsStore = defineStore('userConversations', () => 
   const conversations = ref<Map<string, IConversationMessage[]>>(new Map())
   const selectedConversationId = ref<string>('')
   const selectedAiModel = ref<IAIModel>(OpenAiModels[0])
+  const inlineInputQuery = ref<string>('')
+  const floatingInputQuery = ref<string>('')
 
   // onMounted(() => {
   //   const newConversationId = uuidv4()
@@ -117,6 +119,8 @@ export const useUserConversationsStore = defineStore('userConversations', () => 
     selectConversationAiModel,
     getConversationHistory,
     clearConversation,
-    isThereStreamingResponse
+    isThereStreamingResponse,
+    inlineInputQuery,
+    floatingInputQuery
   }
 })

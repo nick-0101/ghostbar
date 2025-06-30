@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted, ref, watch, watchEffect } from 'vue'
+import { ref, watch } from 'vue'
 import FloatingInput from './FloatingInput.vue'
 
 const cursorPosition = ref({ x: 0, y: 0 })
@@ -68,6 +68,7 @@ const handleRemoveEventListeners = () => {
 watch(
   () => props.isVisible,
   newValue => {
+    console.log(selectedText.value)
     if (newValue) {
       handleAddEventListeners()
     } else {
