@@ -9,7 +9,6 @@ import { useUserConversationsStore } from '@/stores/conversations'
 import { storeToRefs } from 'pinia'
 
 interface Props {
-  streamedResponse: string
   isStreaming: boolean
   streamingError?: string
 }
@@ -38,13 +37,14 @@ const userScrolled = ref(false)
 
 // Auto-scroll to bottom as new content arrives
 watch(
-  () => [props.streamedResponse, props.isStreaming],
+  () => conversationsArray.value,
   async () => {
     await nextTick()
     if (contentContainer.value && !userScrolled.value) {
       contentContainer.value.scrollTop = contentContainer.value.scrollHeight
     }
-  }
+  },
+  { deep: true }
 )
 
 const handleScroll = () => {
@@ -109,7 +109,12 @@ function handleMouseUp() {
   // }
 }
 
-function toggleOutputOverlay() {
+const toggleOutputOverlay = () => {
+  emit('update:toggleOutputOverlay')
+}
+
+const handleCloseModal = () => {
+  userConversationsStore.clearConversation()
   emit('update:toggleOutputOverlay')
 }
 
@@ -153,7 +158,7 @@ onUnmounted(() => {
     <div class="ghostbar-overlay-inner">
       <div class="ghostbar-overlay-content">
         <div class="ghostbar-header">
-          <button class="ghostbar-close Button" data-variant="ghost" @click="toggleOutputOverlay">
+          <button class="ghostbar-close Button" data-variant="ghost" @click="handleCloseModal">
             <XIcon :color="'var(--muted-foreground)'" :size="18" />
           </button>
 
@@ -166,7 +171,6 @@ onUnmounted(() => {
           </button>
         </div>
 
-        <span v-if="isStreaming && !streamedResponse" class="streaming-indicator"></span>
         <div class="ghostbar-body" ref="contentContainer">
           <div v-for="[conversationId, conversation] in conversationsArray" :key="conversationId">
             <div v-for="(message, index) in conversation" :key="`${conversationId}-${index}`">
@@ -179,17 +183,18 @@ onUnmounted(() => {
               </div>
             </div>
           </div>
+          <span
+            v-if="
+              props.isStreaming &&
+              !props.streamingError &&
+              !userConversationsStore.isThereStreamingResponse()
+            "
+            class="streaming-indicator"
+          ></span>
 
-          <div
-            v-if="streamedResponse && !streamingError"
-            id="stream-response"
-            class="response-text"
-          >
-            <vue-markdown :source="streamedResponse" :plugins="vueMarkdownPlugins" />
-          </div>
-          <div v-if="streamingError" class="streaming-error">
+          <div v-if="props.streamingError" class="streaming-error">
             <p>
-              {{ streamingError }}
+              {{ props.streamingError }}
             </p>
           </div>
         </div>

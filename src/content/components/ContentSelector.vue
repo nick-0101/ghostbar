@@ -1,91 +1,94 @@
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted, ref, watch, watchEffect } from "vue";
-import FloatingInput from "./FloatingInput.vue";
+import { computed, onMounted, onUnmounted, ref, watch, watchEffect } from 'vue'
+import FloatingInput from './FloatingInput.vue'
 
-const cursorPosition = ref({ x: 0, y: 0 });
-const hoveredElement = ref<HTMLElement | null>(null);
-const clickedElement = ref<HTMLElement | null>(null);
-const selectedText = ref<string>("");
-const scrollPosition = ref({ x: 0, y: 0 });
+const cursorPosition = ref({ x: 0, y: 0 })
+const hoveredElement = ref<HTMLElement | null>(null)
+const clickedElement = ref<HTMLElement | null>(null)
+const selectedText = ref<string>('')
+const scrollPosition = ref({ x: 0, y: 0 })
 
 const props = defineProps<{
-  isVisible: boolean;
-}>();
+  isVisible: boolean
+}>()
 
-const HIGHLIGHT_CLASS = "ghostbar-highlighted-selected-element";
+const HIGHLIGHT_CLASS = 'ghostbar-highlighted-selected-element'
 
 const handleMouseMove = (event: MouseEvent) => {
-  cursorPosition.value = { x: event.clientX, y: event.clientY };
+  cursorPosition.value = { x: event.clientX, y: event.clientY }
 
   // Get element under cursor
-  const element = document.elementFromPoint(event.clientX, event.clientY) as HTMLElement;
+  const element = document.elementFromPoint(event.clientX, event.clientY) as HTMLElement
   if (element && element !== hoveredElement.value) {
-    hoveredElement.value = element;
+    hoveredElement.value = element
   }
-};
+}
 
 const handleClick = (event: MouseEvent) => {
-  event.preventDefault();
-  event.stopPropagation();
+  event.preventDefault()
+  event.stopPropagation()
 
   if (hoveredElement.value) {
     // Remove highlight from previous element
     if (clickedElement.value) {
-      clickedElement.value.classList.remove(HIGHLIGHT_CLASS);
+      clickedElement.value.classList.remove(HIGHLIGHT_CLASS)
     }
 
-    selectedText.value = hoveredElement.value.textContent?.trim() || "";
-    clickedElement.value = hoveredElement.value;
-    hoveredElement.value = null;
+    selectedText.value = hoveredElement.value.textContent?.trim() || ''
+    clickedElement.value = hoveredElement.value
+    hoveredElement.value = null
 
     // Add highlight class to the clicked element
-    clickedElement.value.classList.add(HIGHLIGHT_CLASS);
+    clickedElement.value.classList.add(HIGHLIGHT_CLASS)
 
     // Remove mousemove listener to disable hover
-    document.removeEventListener("mousemove", handleMouseMove);
+    document.removeEventListener('mousemove', handleMouseMove)
   }
-};
+}
 
 const updateScrollPosition = () => {
   scrollPosition.value = {
     x: window.scrollX,
-    y: window.scrollY,
-  };
-};
+    y: window.scrollY
+  }
+}
 
 const handleAddEventListeners = () => {
-  document.addEventListener("mousemove", handleMouseMove);
-  document.addEventListener("click", handleClick);
-  window.addEventListener("scroll", updateScrollPosition);
-};
+  document.addEventListener('mousemove', handleMouseMove)
+  document.addEventListener('click', handleClick)
+  window.addEventListener('scroll', updateScrollPosition)
+}
 
 const handleRemoveEventListeners = () => {
-  document.removeEventListener("mousemove", handleMouseMove);
-  document.removeEventListener("click", handleClick);
-  window.removeEventListener("scroll", updateScrollPosition);
-};
+  document.removeEventListener('mousemove', handleMouseMove)
+  document.removeEventListener('click', handleClick)
+  window.removeEventListener('scroll', updateScrollPosition)
+}
 
 watch(
   () => props.isVisible,
-  (newValue) => {
+  newValue => {
     if (newValue) {
-      handleAddEventListeners();
+      handleAddEventListeners()
     } else {
-      handleRemoveEventListeners();
+      handleRemoveEventListeners()
       if (clickedElement.value) {
-        clickedElement.value.classList.remove(HIGHLIGHT_CLASS);
+        clickedElement.value.classList.remove(HIGHLIGHT_CLASS)
       }
-      selectedText.value = "";
-      clickedElement.value = null;
-      hoveredElement.value = null;
+      selectedText.value = ''
+      clickedElement.value = null
+      hoveredElement.value = null
     }
   }
-);
+)
 </script>
 
 <template>
   <div class="ghostbar-content-selector">
-    <div class="ghostbar-selector" :style="{ top: `${cursorPosition.y}px`, left: `${cursorPosition.x}px` }"></div>
+    <div
+      class="ghostbar-selector"
+      :style="{ top: `${cursorPosition.y}px`, left: `${cursorPosition.x}px` }"
+    ></div>
     <div
       v-if="hoveredElement"
       class="element-highlight"
@@ -93,7 +96,7 @@ watch(
         top: hoveredElement?.getBoundingClientRect()?.top + 'px',
         left: hoveredElement?.getBoundingClientRect()?.left + 'px',
         width: hoveredElement?.getBoundingClientRect()?.width + 'px',
-        height: hoveredElement?.getBoundingClientRect()?.height + 'px',
+        height: hoveredElement?.getBoundingClientRect()?.height + 'px'
       }"
     ></div>
     <FloatingInput :selectedText="selectedText" />
