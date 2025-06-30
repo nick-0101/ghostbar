@@ -95,7 +95,7 @@ const handleMouseMove = (event: MouseEvent) => {
   }
 }
 
-function handleMouseUp() {
+const handleMouseUp = () => {
   isDragging.value = false
 }
 
@@ -109,6 +109,10 @@ const handleCloseModal = async () => {
     action: 'clearConversation'
   })
   emit('update:toggleOutputOverlay')
+}
+
+const handleStartNewConversation = () => {
+  userConversationsStore.startNewConversation()
 }
 
 // Get the shadow root's document for event listeners
@@ -158,7 +162,7 @@ onUnmounted(() => {
           <button
             class="ghostbar-new-chat Button"
             data-variant="ghost"
-            @click="toggleOutputOverlay"
+            @click="handleStartNewConversation"
           >
             <SquarePenIcon :color="'var(--muted-foreground)'" :size="18" />
           </button>

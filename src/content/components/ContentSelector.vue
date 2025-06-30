@@ -68,7 +68,6 @@ const handleRemoveEventListeners = () => {
 watch(
   () => props.isVisible,
   newValue => {
-    console.log(selectedText.value)
     if (newValue) {
       handleAddEventListeners()
     } else {

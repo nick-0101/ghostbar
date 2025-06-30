@@ -30,6 +30,13 @@ export const useUserConversationsStore = defineStore('userConversations', () => 
   //   ])
   // })
 
+  const startNewConversation = () => {
+    const newConversationId = uuidv4()
+    selectedConversationId.value = newConversationId
+    inlineInputQuery.value = ''
+    floatingInputQuery.value = ''
+  }
+
   const addUserQueryToConversation = (query: string) => {
     if (!selectedConversationId.value) {
       const newConversationId = uuidv4()
@@ -111,6 +118,7 @@ export const useUserConversationsStore = defineStore('userConversations', () => 
   return {
     conversations,
     selectedConversationId,
+    startNewConversation,
     addUserQueryToConversation,
     startAssistantResponse,
     updateAssistantResponse,
