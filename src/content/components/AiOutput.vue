@@ -21,14 +21,12 @@ const emit = defineEmits<{
 const userConversationsStore = useUserConversationsStore()
 const { conversations } = storeToRefs(userConversationsStore)
 
-// Convert Map to array for better reactivity
 const conversationsArray = computed(() => {
   return Array.from(conversations.value.entries())
 })
 
 const vueMarkdownPlugins = [MarkdownItHighlightjs]
 const isDragging = ref(false)
-// const position = ref({ x: 0, y: -100 });
 const cursorPosition = ref({ x: window.innerWidth / 2, y: 100 })
 const dragOffset = ref({ x: 0, y: 0 })
 const moveSpeed = 10
@@ -99,22 +97,17 @@ const handleMouseMove = (event: MouseEvent) => {
 
 function handleMouseUp() {
   isDragging.value = false
-
-  // if (isDragging.value) {
-  //   isDragging.value = false;
-  //   const overlay = document.getElementById("ghostbar-overlay");
-  //   if (overlay) {
-  //     overlay.style.transition = "all 0.2s ease-in-out";
-  //   }
-  // }
 }
 
 const toggleOutputOverlay = () => {
   emit('update:toggleOutputOverlay')
 }
 
-const handleCloseModal = () => {
+const handleCloseModal = async () => {
   userConversationsStore.clearConversation()
+  await chrome.runtime.sendMessage({
+    action: 'clearConversation'
+  })
   emit('update:toggleOutputOverlay')
 }
 

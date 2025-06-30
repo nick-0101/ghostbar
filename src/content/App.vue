@@ -46,6 +46,7 @@ watch(isVisible, newVal => {
 onMounted(() => {
   chrome.runtime.onMessage.addListener((message: any) => {
     if (message.action === 'toggleOverlay') {
+      console.log('toggleOverlay', message.isVisible)
       isVisible.value = message.isVisible
     }
 

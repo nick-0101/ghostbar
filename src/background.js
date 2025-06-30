@@ -1,39 +1,58 @@
-import { OpenAI } from "openai";
+import { OpenAI } from 'openai'
 
 // Track active tabs
-const activeTabs = new Set();
+const activeTabs = new Set()
 
 // Listen for keyboard command
-chrome.commands.onCommand.addListener((command) => {
-  if (command === "toggle-ghostbar") {
+chrome.commands.onCommand.addListener(command => {
+  if (command === 'toggle-ghostbar') {
     // Get the active tab
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-      const activeTab = tabs[0];
+    chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
+      const activeTab = tabs[0]
       if (activeTab.id) {
         try {
           // Toggle the active state for this tab
           if (activeTabs.has(activeTab.id)) {
-            activeTabs.delete(activeTab.id);
-            chrome.tabs.sendMessage(activeTab.id, { action: "toggleOverlay", isVisible: false });
+            activeTabs.delete(activeTab.id)
+            chrome.tabs.sendMessage(activeTab.id, { action: 'toggleOverlay', isVisible: false })
           } else {
-            activeTabs.add(activeTab.id);
-            chrome.tabs.sendMessage(activeTab.id, { action: "toggleOverlay", isVisible: true });
+            activeTabs.add(activeTab.id)
+            chrome.tabs.sendMessage(activeTab.id, { action: 'toggleOverlay', isVisible: true })
           }
         } catch (error) {
-          console.error("Error:", error);
+          console.error('Error:', error)
         }
       }
-    });
+    })
   }
-});
+})
 
-chrome.runtime.onConnect.addListener((port) => {
-  if (port.name === "ghostbar-api") {
-    port.onMessage.addListener((msg) => {
-      console.log("Received message:", msg);
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  if (request.action === 'clearConversation') {
+    console.log('clearConversation')
+    chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
+      const activeTab = tabs[0]
+      if (activeTab.id) {
+        try {
+          // Toggle the active state for this tab
+          if (activeTabs.has(activeTab.id)) {
+            activeTabs.delete(activeTab.id)
+          }
+        } catch (error) {
+          console.error('Error:', error)
+        }
+      }
+    })
+  }
+})
+
+chrome.runtime.onConnect.addListener(port => {
+  if (port.name === 'ghostbar-api') {
+    port.onMessage.addListener(msg => {
+      console.log('Received message:', msg)
 
       // Handle messages from content script if needed
-      if (msg.action === "executeQuery") {
+      if (msg.action === 'executeQuery') {
         // For debugging
         // console.log("Executing query:", msg.prompt);
 
@@ -44,74 +63,74 @@ chrome.runtime.onConnect.addListener((port) => {
         //   completeResponse: "Stream completed",
         // });
 
-        (async () => {
+        ;(async () => {
           try {
             port.postMessage({
-              action: "streamStart",
-            });
+              action: 'streamStart'
+            })
 
-            const storageRes = await chrome.storage.sync.get("apiKey");
+            const storageRes = await chrome.storage.sync.get('apiKey')
 
             const client = new OpenAI({
-              apiKey: storageRes.apiKey,
-            });
+              apiKey: storageRes.apiKey
+            })
 
             const stream = await client.responses.create({
               model: msg.aiModel,
               input: [...msg.history],
-              stream: true,
-            });
+              stream: true
+            })
 
             for await (const chunk of stream) {
               switch (chunk.type) {
-                case "response.output_text.delta":
-                  port.postMessage({ action: "streamResponse", aiResponse: chunk.delta });
-                  break;
-                case "response.output_item.done":
+                case 'response.output_text.delta':
+                  port.postMessage({ action: 'streamResponse', aiResponse: chunk.delta })
+                  break
+                case 'response.output_item.done':
                   port.postMessage({
-                    action: "streamComplete",
-                    completeResponse: chunk?.item?.content?.[0]?.text || "",
-                  });
-                  break;
+                    action: 'streamComplete',
+                    completeResponse: chunk?.item?.content?.[0]?.text || ''
+                  })
+                  break
                 default:
-                  break;
+                  break
               }
             }
 
-            console.log("Streaming completed successfully");
+            console.log('Streaming completed successfully')
           } catch (error) {
-            console.error("Error during streaming:", error);
+            console.error('Error during streaming:', error)
             port.postMessage({
-              action: "streamError",
-              error: error.message,
-            });
+              action: 'streamError',
+              error: error.message
+            })
           }
-        })();
+        })()
       }
-    });
+    })
 
     port.onDisconnect.addListener(() => {
-      console.log("GhostBar stream port disconnected");
-    });
+      console.log('GhostBar stream port disconnected')
+    })
   }
-});
+})
 
 // Clean up when tab is closed
-chrome.tabs.onRemoved.addListener((tabId) => {
-  activeTabs.delete(tabId);
-});
+chrome.tabs.onRemoved.addListener(tabId => {
+  activeTabs.delete(tabId)
+})
 
 // Clean up when tab is updated (e.g., navigation)
 chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {
-  if (changeInfo.status === "loading") {
-    activeTabs.delete(tabId);
+  if (changeInfo.status === 'loading') {
+    activeTabs.delete(tabId)
   }
-});
+})
 
 // When a new tab is created, ensure it's not active by default
-chrome.tabs.onCreated.addListener((tab) => {
+chrome.tabs.onCreated.addListener(tab => {
   // New tabs should not have the extension active
   if (activeTabs.has(tab.id)) {
-    activeTabs.delete(tab.id);
+    activeTabs.delete(tab.id)
   }
-});
+})
