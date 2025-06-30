@@ -52,16 +52,6 @@ chrome.runtime.onConnect.addListener(port => {
 
       // Handle messages from content script if needed
       if (msg.action === 'executeQuery') {
-        // For debugging
-        // console.log("Executing query:", msg.prompt);
-
-        // port.postMessage({ action: "streamResponse", aiResponse: "Hello, world!" });
-
-        // port.postMessage({
-        //   action: "streamComplete",
-        //   completeResponse: "Stream completed",
-        // });
-
         ;(async () => {
           try {
             port.postMessage({

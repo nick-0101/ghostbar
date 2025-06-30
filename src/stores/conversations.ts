@@ -11,25 +11,6 @@ export const useUserConversationsStore = defineStore('userConversations', () => 
   const inlineInputQuery = ref<string>('')
   const floatingInputQuery = ref<string>('')
 
-  // onMounted(() => {
-  //   const newConversationId = uuidv4()
-  //   conversations.value.set(newConversationId, [
-  //     { role: 'user', content: 'Explain bufircation to me' }
-  //   ])
-  //   const newConversationId2 = uuidv4()
-  //   conversations.value.set(newConversationId2, [
-  //     { role: 'assistant', content: 'This is bifurcation' }
-  //   ])
-  //   const newConversationId3 = uuidv4()
-  //   conversations.value.set(newConversationId3, [
-  //     { role: 'user', content: 'Ah I see, bit I want more details' }
-  //   ])
-  //   const newConversationId4 = uuidv4()
-  //   conversations.value.set(newConversationId4, [
-  //     { role: 'assistant', content: 'Sure thing! hEre are more details' }
-  //   ])
-  // })
-
   const startNewConversation = () => {
     const newConversationId = uuidv4()
     selectedConversationId.value = newConversationId
