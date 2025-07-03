@@ -1,49 +1,42 @@
 {
   "$schema": "https://mintlify.com/docs.json",
   "theme": "mint",
-  "name": "Mint Starter Kit",
+  "name": "Ghostbar - Documentation",
   "colors": {
     "primary": "#16A34A",
     "light": "#07C983",
     "dark": "#15803D"
   },
-  "favicon": "/favicon.svg",
+  "favicon": "images/favicon.ico",
   "navigation": {
-    "tabs": [
+    "versions": [
       {
-        "tab": "Guides",
-        "groups": [
+        "version": "1.0.0",
+        "tabs": [
           {
-            "group": "Get Started",
-            "pages": ["index", "quickstart", "development"]
-          },
-          {
-            "group": "Essentials",
-            "pages": [
-              "essentials/markdown",
-              "essentials/code",
-              "essentials/images",
-              "essentials/settings",
-              "essentials/navigation",
-              "essentials/reusable-snippets"
+            "tab": "Getting Started",
+            "groups": [
+              {
+                "group": "Getting Started",
+                "pages": ["v1/introduction", "v1/setup"]
+              },
+              {
+                "group": "Usage",
+                "pages": ["v1/usage/activation"]
+              },
+              {
+                "group": "Features",
+                "pages": ["v1/features/overview"]
+              }
             ]
-          }
-        ]
-      },
-      {
-        "tab": "API Reference",
-        "groups": [
-          {
-            "group": "API Documentation",
-            "pages": ["api-reference/introduction"]
           },
           {
-            "group": "Endpoint Examples",
-            "pages": [
-              "api-reference/endpoint/get",
-              "api-reference/endpoint/create",
-              "api-reference/endpoint/delete",
-              "api-reference/endpoint/webhook"
+            "tab": "Changelog",
+            "groups": [
+              {
+                "group": "Getting Started",
+                "pages": ["v1/introduction", "v1/setup"]
+              }
             ]
           }
         ]
@@ -52,45 +45,33 @@
     "global": {
       "anchors": [
         {
-          "anchor": "Documentation",
-          "href": "https://mintlify.com/docs",
-          "icon": "book-open-cover"
-        },
-        {
           "anchor": "Community",
           "href": "https://mintlify.com/community",
-          "icon": "slack"
+          "icon": "reddit"
         },
         {
-          "anchor": "Blog",
-          "href": "https://mintlify.com/blog",
-          "icon": "newspaper"
+          "anchor": "Creator Twitter",
+          "href": "https://x.com/nickmd01",
+          "icon": "twitter"
         }
       ]
     }
   },
   "logo": {
-    "light": "/logo/light.svg",
-    "dark": "/logo/dark.svg"
+    "light": "/images/ghostbar-test.jpg",
+    "dark": "/images/ghostbar-logo-dark.png"
   },
   "navbar": {
-    "links": [
-      {
-        "label": "Support",
-        "href": "mailto:hi@mintlify.com"
-      }
-    ],
     "primary": {
       "type": "button",
-      "label": "Dashboard",
-      "href": "https://dashboard.mintlify.com"
+      "label": "Download Chrome Extension",
+      "href": "https://google.com"
     }
   },
   "footer": {
     "socials": {
-      "x": "https://x.com/mintlify",
-      "github": "https://github.com/mintlify",
-      "linkedin": "https://linkedin.com/company/mintlify"
+      "x": "https://x.com/nickmd01",
+      "reddit": "https://www.reddit.com/user/nickmd01"
     }
   }
 }
