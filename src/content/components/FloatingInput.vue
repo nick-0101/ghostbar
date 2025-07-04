@@ -1,22 +1,20 @@
 <script setup lang="ts">
-import { onMounted, onUnmounted, ref } from 'vue'
+import { onMounted, onUnmounted, ref, watch } from 'vue'
 import { useUserConversationsStore } from '@/stores/conversations'
 import { usePortStore } from '@/stores/portStore'
+import { storeToRefs } from 'pinia'
 import type { IExecuteQueryMessage } from '@/types'
 
 const cursorPosition = ref({ x: window.innerWidth / 2, y: window.innerHeight - 100 })
 const isDragging = ref(false)
 const dragOffset = ref({ x: 0, y: 0 })
 const userConversationsStore = useUserConversationsStore()
+const { selectedText } = storeToRefs(userConversationsStore)
 const { sendMessage } = usePortStore()
-
-const props = defineProps<{
-  selectedText: string
-}>()
 
 const handleExecuteQuery = () => {
   userConversationsStore.addUserQueryToConversation(
-    `${userConversationsStore.floatingInputQuery}\n\n${props.selectedText}`
+    `${userConversationsStore.floatingInputQuery} \n\n\n ${selectedText.value}`
   )
 
   sendMessage<IExecuteQueryMessage>({

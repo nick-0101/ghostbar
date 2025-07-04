@@ -1,16 +1,18 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
 import FloatingInput from './FloatingInput.vue'
-
-const cursorPosition = ref({ x: 0, y: 0 })
-const hoveredElement = ref<HTMLElement | null>(null)
-const clickedElement = ref<HTMLElement | null>(null)
-const selectedText = ref<string>('')
-const scrollPosition = ref({ x: 0, y: 0 })
+import { useUserConversationsStore } from '@/stores/conversations'
 
 const props = defineProps<{
   isVisible: boolean
+  contentSelectorEnabled: boolean
 }>()
+
+const userConversationsStore = useUserConversationsStore()
+const cursorPosition = ref({ x: 0, y: 0 })
+const hoveredElement = ref<HTMLElement | null>(null)
+const clickedElement = ref<HTMLElement | null>(null)
+const scrollPosition = ref({ x: 0, y: 0 })
 
 const HIGHLIGHT_CLASS = 'ghostbar-highlighted-selected-element'
 
@@ -34,7 +36,7 @@ const handleClick = (event: MouseEvent) => {
       clickedElement.value.classList.remove(HIGHLIGHT_CLASS)
     }
 
-    selectedText.value = hoveredElement.value.textContent?.trim() || ''
+    userConversationsStore.selectedText = hoveredElement.value.textContent?.trim() || ''
     clickedElement.value = hoveredElement.value
     hoveredElement.value = null
 
@@ -68,14 +70,14 @@ const handleRemoveEventListeners = () => {
 watch(
   () => props.isVisible,
   newValue => {
-    if (newValue) {
+    if (newValue && props.contentSelectorEnabled) {
       handleAddEventListeners()
     } else {
       handleRemoveEventListeners()
       if (clickedElement.value) {
         clickedElement.value.classList.remove(HIGHLIGHT_CLASS)
       }
-      selectedText.value = ''
+      userConversationsStore.selectedText = ''
       clickedElement.value = null
       hoveredElement.value = null
     }
@@ -99,6 +101,6 @@ watch(
         height: hoveredElement?.getBoundingClientRect()?.height + 'px'
       }"
     ></div>
-    <FloatingInput :selectedText="selectedText" />
+    <FloatingInput />
   </div>
 </template>

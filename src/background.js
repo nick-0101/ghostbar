@@ -123,3 +123,48 @@ chrome.tabs.onCreated.addListener(tab => {
     activeTabs.delete(tab.id)
   }
 })
+
+chrome.runtime.onInstalled.addListener(() => {
+  let parent = chrome.contextMenus.create({
+    title: 'GhostBar',
+    id: 'ghostbar-context-parent',
+    contexts: ['all']
+  })
+
+  chrome.contextMenus.create({
+    title: 'Prompt on the fly',
+    id: 'ghostbar-context-child-prompt-on-the-fly',
+    contexts: ['selection', 'page', 'link', 'editable', 'browser_action', 'page_action', 'action'],
+    parentId: parent
+  })
+})
+
+chrome.contextMenus.onClicked.addListener(info => {
+  if (info.menuItemId === 'ghostbar-context-child-prompt-on-the-fly') {
+    chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
+      const activeTab = tabs[0]
+      if (activeTab.id) {
+        try {
+          // Toggle the active state for this tab
+          if (activeTabs.has(activeTab.id)) {
+            activeTabs.delete(activeTab.id)
+            chrome.tabs.sendMessage(activeTab.id, {
+              action: 'onTheFlyPrompt',
+              isVisible: true,
+              selectedText: info.selectionText
+            })
+          } else {
+            activeTabs.add(activeTab.id)
+            chrome.tabs.sendMessage(activeTab.id, {
+              action: 'onTheFlyPrompt',
+              isVisible: true,
+              selectedText: info.selectionText
+            })
+          }
+        } catch (error) {
+          console.error('Error:', error)
+        }
+      }
+    })
+  }
+})

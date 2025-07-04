@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import { v4 as uuidv4 } from 'uuid'
 import { OpenAiModels } from '@/constants'
 import type { IAIModel, IConversationMessage } from '@/types'
@@ -10,12 +10,14 @@ export const useUserConversationsStore = defineStore('userConversations', () => 
   const selectedAiModel = ref<IAIModel>(OpenAiModels[0])
   const inlineInputQuery = ref<string>('')
   const floatingInputQuery = ref<string>('')
+  const selectedText = ref<string>('')
 
   const startNewConversation = () => {
     const newConversationId = uuidv4()
     selectedConversationId.value = newConversationId
     inlineInputQuery.value = ''
     floatingInputQuery.value = ''
+    selectedText.value = ''
   }
 
   const addUserQueryToConversation = (query: string) => {
@@ -110,6 +112,7 @@ export const useUserConversationsStore = defineStore('userConversations', () => 
     clearConversation,
     isThereStreamingResponse,
     inlineInputQuery,
-    floatingInputQuery
+    floatingInputQuery,
+    selectedText
   }
 })

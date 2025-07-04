@@ -1,15 +1,18 @@
 <script setup lang="ts">
-import { ref, onMounted, onBeforeUnmount, watch, onUnmounted } from 'vue'
+import { ref, onMounted, onBeforeUnmount, watch, onUnmounted, nextTick } from 'vue'
 import AiOutput from './components/AiOutput.vue'
 import ContentSelector from './components/ContentSelector.vue'
 import { usePortStore } from '@/stores/portStore'
 import { useUserConversationsStore } from '@/stores/conversations'
+import { storeToRefs } from 'pinia'
 
-const { connectPort, onMessage, disconnectPort } = usePortStore()
-const userConversationsStore = useUserConversationsStore()
+const { connectPort, onMessage, sendMessage, disconnectPort } = usePortStore()
 const isVisible = ref(false)
 const isStreaming = ref(false)
 const streamingError = ref('')
+const contentSelectorEnabled = ref(true)
+const userConversationsStore = useUserConversationsStore()
+const { selectedText } = storeToRefs(userConversationsStore)
 
 const toggleOverlay = () => {
   isVisible.value = !isVisible.value
@@ -56,8 +59,22 @@ onMounted(() => {
   document.addEventListener('keydown', handleKeyDown)
 
   chrome.runtime.onMessage.addListener((message: any) => {
-    if (message.action === 'toggleOverlay') {
-      isVisible.value = message.isVisible
+    console.log('message', message)
+    switch (message.action) {
+      case 'toggleOverlay':
+        isVisible.value = message.isVisible
+        break
+      case 'onTheFlyPrompt':
+        isVisible.value = message.isVisible
+        contentSelectorEnabled.value = false
+
+        nextTick(() => {
+          selectedText.value = message.selectedText
+          console.log('selectedText', selectedText.value)
+        })
+        break
+      default:
+        break
     }
 
     return true
@@ -102,6 +119,7 @@ onUnmounted(() => {
   <ContentSelector
     v-show="!isStreaming && !userConversationsStore.isThereStreamingResponse()"
     :is-visible="isVisible"
+    :content-selector-enabled="contentSelectorEnabled"
     @update:toggleOutputOverlay="toggleOverlay"
   />
 </template>
