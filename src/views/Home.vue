@@ -10,7 +10,7 @@ import { ExternalLink } from 'lucide-vue-next'
 
       <a
         class="cursor-pointer underline text-sm text-blue-500 leading-none font-medium"
-        href="https://ghostbar.ai/docs/getting-started/setup"
+        href="https://ghostbar.io/v1/introduction"
         target="_blank"
       >
         How to set up your Ghostbar
