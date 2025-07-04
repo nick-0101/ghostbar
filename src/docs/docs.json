@@ -58,8 +58,8 @@
     }
   },
   "logo": {
-    "light": "/images/ghostbar-test.jpg",
-    "dark": "/images/ghostbar-logo-dark.png"
+    "light": "/logo/ghostbar-light-logo.jpg",
+    "dark": "/logo/ghostbar-dark-logo.jpg"
   },
   "navbar": {
     "primary": {
