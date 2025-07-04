@@ -45,11 +45,6 @@
     "global": {
       "anchors": [
         {
-          "anchor": "Community",
-          "href": "https://mintlify.com/community",
-          "icon": "reddit"
-        },
-        {
           "anchor": "Creator Twitter",
           "href": "https://x.com/nickmd01",
           "icon": "twitter"
@@ -70,8 +65,7 @@
   },
   "footer": {
     "socials": {
-      "x": "https://x.com/nickmd01",
-      "reddit": "https://www.reddit.com/user/nickmd01"
+      "x": "https://x.com/nickmd01"
     }
   }
 }
