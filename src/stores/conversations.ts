@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { computed, onMounted, ref, watch } from 'vue'
+import { computed, onMounted, ref, watch, nextTick } from 'vue'
 import { v4 as uuidv4 } from 'uuid'
 import { OpenAiModels } from '@/constants'
 import type { IAIModel, IConversationMessage } from '@/types'
@@ -12,7 +12,11 @@ export const useUserConversationsStore = defineStore('userConversations', () => 
   const floatingInputQuery = ref<string>('')
   const selectedText = ref<string>('')
 
-  const startNewConversation = () => {
+  watch(floatingInputQuery, val => {
+    console.log('floatingInputQuery changed from store:', floatingInputQuery)
+  })
+
+  const startNewConversation = async () => {
     const newConversationId = uuidv4()
     selectedConversationId.value = newConversationId
     inlineInputQuery.value = ''
@@ -96,6 +100,9 @@ export const useUserConversationsStore = defineStore('userConversations', () => 
   const clearConversation = () => {
     conversations.value.clear()
     selectedConversationId.value = ''
+    floatingInputQuery.value = ''
+    selectedText.value = ''
+    inlineInputQuery.value = ''
   }
 
   return {

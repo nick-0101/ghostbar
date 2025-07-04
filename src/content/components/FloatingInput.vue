@@ -9,8 +9,12 @@ const cursorPosition = ref({ x: window.innerWidth / 2, y: window.innerHeight - 1
 const isDragging = ref(false)
 const dragOffset = ref({ x: 0, y: 0 })
 const userConversationsStore = useUserConversationsStore()
-const { selectedText } = storeToRefs(userConversationsStore)
+const { selectedText, floatingInputQuery } = storeToRefs(userConversationsStore)
 const { sendMessage } = usePortStore()
+
+watch(floatingInputQuery, val => {
+  console.log('floatingInputQuery changed from input:', floatingInputQuery)
+})
 
 const handleExecuteQuery = () => {
   userConversationsStore.addUserQueryToConversation(
