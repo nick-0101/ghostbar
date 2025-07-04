@@ -48,7 +48,7 @@ const getOrCreateSessionId = async () => {
   return sessionData.session_id
 }
 
-const sendAnalyticsEvent = async (name, params) => {
+const sendAnalyticsEvent = async (name, params = {}) => {
   const sessionId = await getOrCreateSessionId()
 
   fetch(`${GA_ENDPOINT}?measurement_id=${MEASUREMENT_ID}&api_secret=${API_SECRET}`, {
@@ -72,6 +72,8 @@ const sendAnalyticsEvent = async (name, params) => {
 // Listen for keyboard command
 chrome.commands.onCommand.addListener(command => {
   if (command === 'toggle-ghostbar') {
+    sendAnalyticsEvent('toggle_ghostbar')
+
     // Get the active tab
     chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
       const activeTab = tabs[0]
@@ -111,7 +113,9 @@ chrome.runtime.onMessage.addListener(request => {
       })
       break
     case 'logAnalytics':
-      sendAnalyticsEvent(request.name, request.params)
+      ;(async () => {
+        await sendAnalyticsEvent(request.name, request.params)
+      })()
       break
     default:
       break
@@ -121,8 +125,6 @@ chrome.runtime.onMessage.addListener(request => {
 chrome.runtime.onConnect.addListener(port => {
   if (port.name === 'ghostbar-api') {
     port.onMessage.addListener(msg => {
-      console.log('Received message:', msg)
-
       // Handle messages from content script if needed
       if (msg.action === 'executeQuery') {
         ;(async () => {
@@ -160,6 +162,7 @@ chrome.runtime.onConnect.addListener(port => {
             }
 
             console.log('Streaming completed successfully')
+            await sendAnalyticsEvent('execute_query')
           } catch (error) {
             console.error('Error during streaming:', error)
             port.postMessage({
@@ -236,6 +239,10 @@ chrome.contextMenus.onClicked.addListener(info => {
               selectedText: info.selectionText
             })
           }
+
+          ;(async () => {
+            await sendAnalyticsEvent('prompt_on_the_fly')
+          })()
         } catch (error) {
           console.error('Error:', error)
         }
