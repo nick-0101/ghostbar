@@ -197,7 +197,7 @@ onUnmounted(() => {
         </div>
       </div>
       <div class="response-actions">
-        <InlineInput selected-text="selectedText" />
+        <InlineInput :is-streaming="props.isStreaming" />
       </div>
     </div>
   </div>

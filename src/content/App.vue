@@ -59,7 +59,6 @@ onMounted(() => {
   document.addEventListener('keydown', handleKeyDown)
 
   chrome.runtime.onMessage.addListener((message: any) => {
-    console.log('message', message)
     switch (message.action) {
       case 'toggleOverlay':
         isVisible.value = message.isVisible

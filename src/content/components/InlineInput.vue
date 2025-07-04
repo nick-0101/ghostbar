@@ -6,6 +6,10 @@ import Popover from './ui/Popover.vue'
 import { OpenAiModels } from '@/constants'
 import type { IAIModel, IExecuteQueryMessage } from '@/types'
 
+const props = defineProps<{
+  isStreaming: boolean
+}>()
+
 const cursorPosition = ref({ x: window.innerWidth / 2, y: window.innerHeight - 100 })
 const isDragging = ref(false)
 const dragOffset = ref({ x: 0, y: 0 })
@@ -122,8 +126,13 @@ onUnmounted(() => {
           </div>
         </Popover>
 
-        <button class="ghostbar-inline-input-search-button" @click.stop="handleExecuteQuery">
+        <button
+          class="ghostbar-inline-input-search-button"
+          @click.stop="handleExecuteQuery"
+          :disabled="props.isStreaming"
+        >
           <svg
+            v-if="!props.isStreaming"
             xmlns="http://www.w3.org/2000/svg"
             width="20"
             height="20"
@@ -136,6 +145,21 @@ onUnmounted(() => {
           >
             <path d="m5 12 7-7 7 7" />
             <path d="M12 19V5" />
+          </svg>
+          <svg
+            v-else
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="spin"
+          >
+            <path d="M21 12a9 9 0 1 1-6.219-8.56" />
           </svg>
         </button>
       </div>

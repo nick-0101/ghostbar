@@ -1307,6 +1307,16 @@
     line-height: var(--line-height-tight);
   }
 
+  .spin{
+    animation: var(--animate-spin);
+  }
+
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
   @keyframes float {
     0%,
     100% {
