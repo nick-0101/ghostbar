@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, computed, watch, nextTick } from 'vue'
-import { XIcon, SquarePenIcon } from 'lucide-vue-next'
+import XIcon from '@/components/icons/x.vue'
+import SquarePenIcon from '@/components/icons/square-pen.vue'
 import InlineInput from './InlineInput.vue'
 import VueMarkdown from 'vue-markdown-render'
 import MarkdownItHighlightjs from 'markdown-it-highlightjs'
@@ -156,7 +157,7 @@ onUnmounted(() => {
       <div class="ghostbar-overlay-content">
         <div class="ghostbar-header">
           <button class="ghostbar-close Button" data-variant="ghost" @click="handleCloseModal">
-            <XIcon :color="'var(--muted-foreground)'" :size="18" />
+            <XIcon class="text-var(--muted-foreground)" :size="18" />
           </button>
 
           <button

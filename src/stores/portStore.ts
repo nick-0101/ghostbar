@@ -7,7 +7,7 @@ export const usePortStore = defineStore('port', () => {
 
   const connectPort = (name = 'ghostbar-api') => {
     if (!port) {
-      port = chrome.runtime.connect({ name })
+      port = chrome.runtime.connect({ name } as any)
       port.onDisconnect.addListener(() => {
         port = null
       })
