@@ -3,7 +3,7 @@
   "description": "GhostBar transforms your browsing with seamless AI chat on every page. Highlight, ask, and get instant responses—from explanations to brainstorming—all in one click, no copy-paste required.",
   "version": "1.0",
   "manifest_version": 3,
-  "permissions": ["storage", "activeTab", "scripting"],
+  "permissions": ["storage", "activeTab", "scripting", "contextMenus"],
   "host_permissions": ["http://localhost:5173/*"],
   "icons": {
     "16": "public/ghostbar_logo_16x16.png",

@@ -201,57 +201,66 @@ chrome.tabs.onCreated.addListener(tab => {
   }
 })
 
-// chrome.runtime.onInstalled.addListener(async () => {
-//   await getOrCreateClientId()
+chrome.runtime.onInstalled.addListener(async () => {
+  try {
+    await getOrCreateClientId()
 
-//   // Create parent menu
-//   await chrome.contextMenus.create({
-//     title: 'GhostBar',
-//     id: 'ghostbar-context-parent',
-//     contexts: ['all']
-//   })
+    // Create parent menu
+    await chrome.contextMenus.create({
+      title: 'GhostBar',
+      id: 'ghostbar-context-parent',
+      contexts: ['all']
+    })
 
-//   // Create child menu
-//   await chrome.contextMenus.create({
-//     title: 'Prompt on the fly',
-//     id: 'ghostbar-context-child-prompt-on-the-fly',
-//     contexts: ['selection', 'page', 'link', 'editable'],
-//     parentId: 'ghostbar-context-parent'
-//   })
-// })
+    // Create child menu
+    await chrome.contextMenus.create({
+      title: 'Prompt on the fly',
+      id: 'ghostbar-context-child-prompt-on-the-fly',
+      contexts: ['selection', 'page', 'link', 'editable'],
+      parentId: 'ghostbar-context-parent'
+    })
 
-// chrome.contextMenus.onClicked.addListener(async (info, tab) => {
-//   if (info.menuItemId === 'ghostbar-context-child-prompt-on-the-fly') {
-//     if (tab?.id) {
-//       try {
-//         // Toggle the active state for this tab
-//         if (activeTabs.has(tab.id)) {
-//           activeTabs.delete(tab.id)
-//           chrome.tabs.sendMessage(tab.id, {
-//             action: 'onTheFlyPrompt',
-//             isVisible: true,
-//             selectedText: info.selectionText
-//           })
-//         } else {
-//           activeTabs.add(tab.id)
-//           chrome.tabs.sendMessage(tab.id, {
-//             action: 'onTheFlyPrompt',
-//             isVisible: true,
-//             selectedText: info.selectionText
-//           })
-//         }
+    console.log('Context menus created successfully')
+  } catch (error) {
+    console.error('Error creating context menus:', error)
+  }
+})
 
-//         await sendAnalyticsEvent('prompt_on_the_fly')
-//       } catch (error) {
-//         console.error('Error:', error)
-//       }
-//     }
-//   }
-// })
+// Only add the click listener if contextMenus is available
+if (chrome.contextMenus) {
+  chrome.contextMenus.onClicked.addListener(async (info, tab) => {
+    if (info.menuItemId === 'ghostbar-context-child-prompt-on-the-fly') {
+      if (tab?.id) {
+        try {
+          // Toggle the active state for this tab
+          if (activeTabs.has(tab.id)) {
+            activeTabs.delete(tab.id)
+            chrome.tabs.sendMessage(tab.id, {
+              action: 'onTheFlyPrompt',
+              isVisible: true,
+              selectedText: info.selectionText
+            })
+          } else {
+            activeTabs.add(tab.id)
+            chrome.tabs.sendMessage(tab.id, {
+              action: 'onTheFlyPrompt',
+              isVisible: true,
+              selectedText: info.selectionText
+            })
+          }
 
-// addEventListener('unhandledrejection', async event => {
-//   sendAnalyticsEvent('extension_error', {
-//     message: event.reason.message,
-//     stack: event.reason.stack
-//   })
-// })
+          await sendAnalyticsEvent('prompt_on_the_fly')
+        } catch (error) {
+          console.error('Error:', error)
+        }
+      }
+    }
+  })
+}
+
+addEventListener('unhandledrejection', async event => {
+  sendAnalyticsEvent('extension_error', {
+    message: event.reason.message,
+    stack: event.reason.stack
+  })
+})
