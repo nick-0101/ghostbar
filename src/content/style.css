@@ -1307,7 +1307,7 @@
     line-height: var(--line-height-tight);
   }
 
-  .spin{
+  .spin {
     animation: var(--animate-spin);
   }
 

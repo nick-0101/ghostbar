@@ -22,7 +22,7 @@
               },
               {
                 "group": "Usage",
-                "pages": ["v1/usage/activation"]
+                "pages": ["v1/usage/activation", "v1/usage/keyboard-shortcuts"]
               },
               {
                 "group": "Features",
