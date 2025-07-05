@@ -1,6 +1,6 @@
 {
   "name": "GhostBar",
-  "description": "GhostBar transforms your browsing with seamless AI chat on every page. Highlight, ask, and get instant responses—from explanations to brainstorming—all in one click, no copy-paste required.",
+  "description": "GhostBar brings instant AI chat to any page. Highlight, ask, and get answers—no copy-paste needed.",
   "version": "1.0",
   "manifest_version": 3,
   "permissions": ["storage", "activeTab", "scripting", "contextMenus"],
