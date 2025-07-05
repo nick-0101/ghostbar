@@ -3,7 +3,7 @@
   "description": "GhostBar transforms your browsing with seamless AI chat on every page. Highlight, ask, and get instant responses—from explanations to brainstorming—all in one click, no copy-paste required.",
   "version": "1.0",
   "manifest_version": 3,
-  "permissions": ["storage", "activeTab", "scripting", "contextMenus"],
+  "permissions": ["storage", "activeTab", "scripting"],
   "host_permissions": ["http://localhost:5173/*"],
   "icons": {
     "16": "public/ghostbar_logo_16x16.png",
@@ -33,9 +33,9 @@
   "commands": {
     "toggle-ghostbar": {
       "suggested_key": {
-        "default": "Alt+Shift+I",
-        "mac": "Alt+Shift+I",
-        "windows": "Alt+Shift+G"
+        "default": "Alt+I",
+        "mac": "Alt+I",
+        "windows": "Alt+I"
       },
       "description": "Toggle GhostBar overlay"
     }
