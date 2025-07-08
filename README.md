@@ -1,23 +1,44 @@
-## The Vision
+<div align="center">
 
-I want to be able to highlight any piece of content on the web, weather that be text or an image, and be able to click a keyboard shortcut to immediately pull up a chatgpt window with that selected text as context.
+  <h1>Snkrhub - Track, manage, and organize your sneaker reselling</h1>
 
-## TODO
+  <!-- Badges -->
+<p>
+  <!-- Repo info -->
+  <a href="https://github.com/nick-0101/ghostbar">
+    <img src="https://img.shields.io/github/stars/nick-0101/ghostbar?style=flat-square" alt="stars" />
+  </a>
+  <a href="https://github.com/nick-0101/ghostbar/network/members">
+    <img src="https://img.shields.io/github/forks/nick-0101/ghostbar?style=flat-square" alt="forks" />
+  </a>
+  <a href="https://github.com/nick-0101/ghostbar/issues/">
+    <img src="https://img.shields.io/github/issues/nick-0101/ghostbar?style=flat-square" alt="open issues" />
+  </a>
+  <a href="https://github.com/nick-0101/ghostbar/blob/master/LICENSE">
+    <img src="https://img.shields.io/badge/licence-MIT-brightgreen?style=flat-square" alt="license" />
+  </a>
+</p>
 
-Figure out how we can use typescript
+<h4>
+    <a href="https://x.com/nickmd01/status/1937855490333049291/">View Demo</a>
+  <span> · </span>
+    <a href="#getting-started">Documentation</a>
+  <span> · </span>
+    <a href="https://github.com/nick-0101/ghostbar/issues/">Report Bug</a>
+  <span> · </span>
+    <a href="https://github.com/nick-0101/ghostbar/issues/">Request Feature</a>
+  </h4>
+</div>
 
-## Concepts
+<br />
 
-- Popup Script (popup.js):
+<!-- Table of Contents -->
 
-  - Runs in the extension's popup
-  - Can use Chrome extension APIs
-  - Can't directly access webpage content
-  - Runs only when popup is open
+# Table of Contents
 
-- Content Script (content.js):
-  - Runs in the context of web pages
-  - Can use Chrome extension APIs
-  - Can read and modify webpage content
-  - Runs automatically on matching pages
-  - Can communicate with popup scripts using chrome.runtime.sendMessage
+- [About the Project](#about-the-project)
+  - [Tech Stack](#tech-stack)
+- [Getting Started](#getting-started)
+  - [Prerequisites](#prerequisites)
+  - [Run Frontend Locally](#run-frontend-locally)
+- [License](#license)
