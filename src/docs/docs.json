@@ -3,9 +3,9 @@
   "theme": "mint",
   "name": "Ghostbar - Documentation",
   "colors": {
-    "primary": "#16A34A",
-    "light": "#07C983",
-    "dark": "#15803D"
+    "primary": "#633BFF",
+    "light": "#633BFF",
+    "dark": "#633BFF"
   },
   "favicon": "images/favicon.ico",
   "navigation": {
@@ -27,15 +27,6 @@
               {
                 "group": "Features",
                 "pages": ["v1/features/overview"]
-              }
-            ]
-          },
-          {
-            "tab": "Changelog",
-            "groups": [
-              {
-                "group": "Getting Started",
-                "pages": ["v1/introduction", "v1/setup"]
               }
             ]
           }
