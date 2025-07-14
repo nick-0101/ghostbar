@@ -51,7 +51,7 @@
     "primary": {
       "type": "button",
       "label": "Download Chrome Extension",
-      "href": "https://google.com"
+      "href": "https://chromewebstore.google.com/detail/ghostbar/hnfhanmomiaihkgcbonlkcpmaddiglbf"
     }
   },
   "footer": {
