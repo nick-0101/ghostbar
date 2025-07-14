@@ -12,10 +12,6 @@ const userConversationsStore = useUserConversationsStore()
 const { selectedText, floatingInputQuery } = storeToRefs(userConversationsStore)
 const { sendMessage } = usePortStore()
 
-watch(floatingInputQuery, val => {
-  console.log('floatingInputQuery changed from input:', floatingInputQuery)
-})
-
 const handleExecuteQuery = () => {
   userConversationsStore.addUserQueryToConversation(
     `${userConversationsStore.floatingInputQuery} \n\n\n ${selectedText.value}`
