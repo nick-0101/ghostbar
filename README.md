@@ -22,7 +22,7 @@
 <h4>
     <a href="https://x.com/nickmd01/status/1937855490333049291/">View Demo</a>
   <span> · </span>
-    <a href="#getting-started">Documentation</a>
+    <a href="https://ghostbar.io">Documentation</a>
   <span> · </span>
     <a href="https://github.com/nick-0101/ghostbar/issues/">Report Bug</a>
   <span> · </span>
