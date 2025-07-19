@@ -1,6 +1,6 @@
 <div align="center">
 
-  <h1>Snkrhub - Track, manage, and organize your sneaker reselling</h1>
+  <h1>Ghostbar - Chat with AI on any webpage</h1>
 
   <!-- Badges -->
 <p>
